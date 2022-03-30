@@ -1,0 +1,158 @@
+<script>
+	$(document).ready(function () {
+		var header_h = $(".header").outerHeight(true),
+			sub_h = $(".sub_head").outerHeight(true),
+			menu_h = $(".intro_menu").outerHeight(true),
+			profile_h = $(".profile_box").outerHeight(true),
+			padding_h = header_h + sub_h + menu_h;
+
+		$(".con_box").css("padding-top", padding_h);
+		$(".profile_box").css("top", padding_h);
+		$(".biz_box").css("padding-top", profile_h + 20);
+
+		$(".biz_like .like_l").click(function(){
+			$(this).toggleClass("on");
+		});
+
+		$(".biz_img").click(function(){
+			$(this).toggleClass("biz_img_h");
+		});
+		
+		$(".biz_top .biz_top_txt").click(function(){
+			$(this).toggleClass("txt_click");
+		});
+		
+		$(".biz_like .three_dot_wrap").click(function(){
+			$(".edit_show").not(this).removeClass("edit_show");
+			$(this).toggleClass("edit_show");
+			$(this).next(".edit_btn").toggleClass("edit_show_list")
+			
+			return false;
+		});
+		
+		$(document).click(function(e){ //문서 body를 클릭했을때
+			if(e.target.className == "edit_show"){return false} 
+			$(".edit_show").removeClass("edit_show");
+			$(".edit_btn").removeClass("edit_show_list");
+			//출처: https://webflower.tistory.com/entry/다른영역-클릭시-팝업-닫기 [webflower]
+		});
+
+		$(".go_modify").click(function() {
+			var cat = this.dataset.cat;
+
+			location.href = 'biz_write?mode=modify&brd_no='+cat+'';
+		});
+
+	});
+</script>
+<div class="con_box">
+	<div class="profile_box">
+
+		<div class="profile_l">		
+			<div class="pro_l_img_wrap">
+				<div class="pro_l_img">
+					<img src="/images/ad_ex02.png" alt="프로필사진" />
+				</div>
+				<a href="" class="profile_edit">
+					<img src="/images/setting.svg" alt="프로필 설정" />
+				</a>
+			</div>
+			
+			<div class="pro_l_name">
+				<span class="name_left">안동</span>
+				<span class="name_right">김하석</span>
+			</div>
+		</div>
+
+		<ul class="profile_r">
+			<li class="pro_btn01">
+				<a href="#">제주표선 RC (7지역)</a>
+			</li>
+			<li class="pro_btn02">
+				<a href="#">3662지구 21-22 총재</a>
+			</li>
+			<li>
+				<ol>
+					<li><a href="#"><i class="fas fa-phone-square-alt"></i></a></li>
+					<li><a href="#"><i class="fas fa-envelope-open-text"></i></a></li>
+					<li><a href="#"><i class="fas fa-map-marked-alt"></i></a></li>
+					<li><a href="#"><i class="fas fa-id-card"></i></a></li>
+				</ol>
+			</li>
+		</ul>
+
+	</div>
+
+	<div class="biz_box">
+		<a href="/biz_write" class="biz_write">
+			<i class="fas fa-pencil-alt"></i>
+		</a>
+		<% for(var i = 0; i < data.length; i++) {%>
+		<div class="biz_con_wrap"><!--반복시킬 div-->
+			<div class="biz_top">
+				<div class="biz_img">
+					<img src="../../../file/bizroom/<%=data[i].file_dtname %>" alt="" />
+					<div class="biz_size_icon">
+						<span class="biz_img_h_icon"><i class="fas fa-expand-arrows-alt"></i></span>
+						<span class="biz_img_icon"><i class="fas fa-compress-arrows-alt"></i></span>
+					</div>
+				</div>
+				<div class="biz_like">
+					<div class="like_l">
+						<div class="heart_icon">
+							<!--<i class="fas fa-heart"></i>-->
+							<!--<img src="/images/heart.svg" alt="좋아요" />-->
+						</div>
+						<p>좋아요 <span>1</span>개</p>
+					</div>
+					<div class="like_r">
+						<div class="three_dot_wrap">
+							<div class="three_dot">
+								<div></div>
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+						<ul class="edit_btn">
+							<li><a class="go_modify" data-cat="<%=data[i].board_no %>">수정</a></li>
+							<li><a href="#">삭제</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="biz_top_txt">
+				    <p><%=data[i].board_content %></p>
+				</div>
+			</div>
+			<div class="biz_com">
+				<ul class="biz_com_list">
+					<li>
+						<a href="/biz_comment">
+							<div class="biz_com_top">
+								<p>제주최남단 RC (가원 고미자)</p>
+							</div>
+							<div class="biz_com_btm">
+								<p>총재님!</p>
+								<span>전체댓글</span>
+							</div>
+						</a>
+					</li>
+				</ul>
+				<div class="biz_txt">
+					<input type="text" placeholder="댓글 쓰기" onfocus="this.placeholder=''"
+						onblur="this.placeholder='댓글 쓰기'" />
+					<button>
+						<i class="fas fa-location-arrow"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+		<% }%>
+		<% if(data.length == 0) {%>
+			<li style="padding-top:50px;text-align:center;">
+				등록된 게시물이 없습니다.
+			</li>
+		<% }%>
+		
+	</div>
+
+</div>

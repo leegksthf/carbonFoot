@@ -1,0 +1,260 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<body>
+	<div class="header">
+		<div class="header">
+			<ul>
+				<li>
+					<a href="/"><img src="/images/carbonFoot/logo_ecoce05.png" alt="" /></a>
+				</li>
+				<li>
+					<span>yuna5yuna</span>
+					<i class="fas fa-cog"></i>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="calc-wrap">
+		<div class="bg-img-wrap">
+			<img src="/images/carbonFoot/펭귄.png" alt="">
+			<div class="calc-menu">
+				<div class="calc-menu-title-wrap">
+					<p class="calc-menu-title">탄소발자국(탄소배출량=CO₂사용량) 계산하기</p>
+					<a class="standard-info"><i class="fas fa-question-circle"></i></a>
+				</div>
+				<ul class="circle-wrap">
+					<li>
+						<a class="btn js-click-modal"><img src="/images/carbonFoot/icon_child02.png" alt=""></a>
+						<span>초등학생</span>
+					</li>
+					<li>
+						<a class="btn js-click-modal"><img src="/images/carbonFoot/icon_student02.png" alt=""></a>
+						<span>중고등학생</span>
+					</li>
+					<li>
+						<a class="btn js-click-modal"><img src="/images/carbonFoot/icon_man02.png" alt=""></a>
+						<span>성인</span>
+					</li>
+					<li>
+						<a class="btn js-click-modal"><img src="/images/carbonFoot/icon_company03.png" alt=""></a>
+						<span>기업</span>
+					</li>
+					<li>
+						<a class="btn js-click-modal"><img src="/images/carbonFoot/icon_food.png" alt=""></a>
+						<span>음식</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="eco-level">
+			<img src="/images/carbonFoot/eco_test.png" alt="에코테스트단계이미지" class="eco-test-level-img">
+			<img src="/images/carbonFoot/orange_tree02.png" alt="새싹" class="tree-img sprout">
+			<img src="/images/carbonFoot/orange_tree03.png" alt="아기나무" class="tree-img baby-tree">
+			<img src="/images/carbonFoot/orange_tree04.png" alt="꽃나무" class="tree-img flowering-tree">
+			<img src="/images/carbonFoot/orange_tree05.png" alt="열매나무" class="tree-img fruit-tree">
+		</div>
+	</div>
+
+	<!-- 모달 -->
+	<!-- <div class="standard-modal-wrap">
+		<div class="bottom-up-modal">
+			<div class="bottom-up-header">
+				<div class="header-text">
+					<a class="btn js-close-modal">
+						<i class="fas fa-chevron-down"></i>
+					</a>
+					<span>탄소발자국 계산하기</span>
+				</div>
+				<div class="header-logo">
+					<a href="/"><img src="/images/carbonFoot/logo_ecoce05.png" alt="로고이미지"></a>
+				</div>
+			</div>
+			<div class="bottom-up-body-wrap">
+				<div class="bottom-up-body question-wrap">
+					<div class="question">
+						<span class="question-num">Q1. </span><span class="question-title">아침 밥</span>
+					</div>
+					<div class="answer">
+						<div class="major-class">
+							<button>안 먹음</button>
+							<button>먹음</button>
+						</div>
+						<div class="minor-class">
+							<button>콘프레이크</button>
+							<button>빵·우유</button>
+							<button>과일</button>
+							<button>아침밥</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div> -->
+
+	<div class="modal-container">
+		<div class="bottom-up-modal">
+			<div class="bottom-up-header">
+				<div class="header-text">
+					<a class="btn js-close-modal">
+						<i class="fas fa-chevron-down"></i>
+					</a>
+					<span>탄소발자국 계산하기</span>
+				</div>
+				<div class="header-logo">
+					<a href="/"><img src="/images/carbonFoot/logo_ecoce05.png" alt="로고이미지"></a>
+				</div>
+			</div>
+			<div class="bottom-up-body-wrap">
+				<div class="bottom-up-body">
+					<div class="question-wrap">
+						<div class="question">
+							<span class="question-num">Q1. </span><span class="question-title">아침 밥</span>
+						</div>
+						<div class="answer">
+							<div class="major-class">
+								<input type="button" class="major-class-btn no-acc" value="안 먹음">
+								<input type="button" class="major-class-btn accordion" value="먹음">
+							</div>
+							<div class="minor-class panel">
+								<input type="button" class="minor-class-btn" value="콘프레이크">
+								<input type="button" class="minor-class-btn" value="빵·우유">
+								<input type="button" class="minor-class-btn" value="과일">
+								<input type="button" class="minor-class-btn" value="아침밥">
+							</div>
+						</div>
+					</div>
+					<div class="question-wrap">
+						<div class="question">
+							<span class="question-num">Q2. </span><span class="question-title">양치컵 사용</span>
+						</div>
+						<div class="answer">
+							<div class="major-class">
+								<input type="button" class="major-class-btn no-acc" value="사용">
+								<input type="button" class="major-class-btn accordion" value="미사용">
+							</div>
+							<div class="minor-class panel">
+								<p>양치시간</p>
+							</div>
+						</div>
+					</div>
+					<div class="question-wrap">
+						<div class="question">
+							<span class="question-num">Q3. </span><span class="question-title">등교시 이동수단</span>
+						</div>
+						<div class="answer">
+							<div class="major-class">
+								<input type="button" class="major-class-btn no-acc" value="도보/자전거">
+								<input type="button" class="major-class-btn accordion" value="대중교통">
+								<input type="button" class="major-class-btn accordion2" value="자동차">
+							</div>
+							<div class="minor-class panel">
+								<input type="button" class="minor-class-btn" value="지하철">
+								<input type="button" class="minor-class-btn" value="버스">
+								<p>등교시간</p>
+							</div>
+							<div class="minor-class panel1">
+								<input type="button" class="minor-class-btn" value="전기차">
+								<input type="button" class="minor-class-btn" value="하이브리드">
+								<input type="button" class="minor-class-btn" value="LPG">
+								<input type="button" class="minor-class-btn" value="경유">
+								<input type="button" class="minor-class-btn" value="휘발유">
+								<p>등교시간</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="calcBtn-wrap">
+				<button type="submit" class="calcBtn">
+					<img src="/images/carbonFoot/icon_count02.png" alt="">
+					<span>탄소발자국 계산하기</span>
+				</button>
+			</div>
+			<div class="calcResult-wrap">
+				<div class="calcResult-text">
+					<p>Yuna5yuna님의 오렌지 나무는<br/>
+					<span class="kindOfTree">씨앗</span>입니다.</p>
+				</div>
+				<div class="calcResult-img">
+					<img class="kindOfTreeImg" src="/images/carbonFoot/orange_tree2.png" alt="">
+					<img class="handImg" src="/images/carbonFoot/half_orange.png" alt="계산결과이미지">
+				</div>
+				<div class="view-mission">
+					<a href="#">
+						<img src="/images/carbonFoot/icon_list01.png" alt="">
+						<span>탄소발자국 실천 미션 보기</span>
+					</a>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+
+
+	<script>
+		$('.js-click-modal').click(function () {
+			$('.modal-container').addClass('modal-open');
+		});
+
+		$('.js-close-modal').click(function () {
+			$('.modal-container').removeClass('modal-open');
+		});
+
+		$('.js-click-modal').click(function () {
+			$('.header').fadeOut(800);
+		});
+
+		$('.js-close-modal').click(function () {
+			$('.header').fadeIn(600);
+		});
+
+		var acc = document.getElementsByClassName("accordion");
+		var i;
+
+		for (i = 0; i < acc.length; i++) {
+			acc[i].addEventListener("click", function () {
+				var panel = this.parentNode.nextElementSibling;
+				if (panel.style.display === "none") {
+					panel.style.display = "block";
+				} else {
+					panel.style.display = "block";
+				}
+			});
+		}
+
+		var noacc = document.getElementsByClassName("no-acc");
+		var i;
+
+		for (i = 0; i < noacc.length; i++) {
+			noacc[i].addEventListener("click", function () {
+				var panel = this.parentNode.nextElementSibling;
+				panel.style.display = "none";
+			});
+		}
+
+
+		var tablinks = document.getElementsByClassName('major-class-btn');
+		for (var i = 0; i < tablinks.length; i++) {
+			tablinks[i].addEventListener('click', function () {
+				for (var j = 0; j < tablinks.length; j++) {
+					tablinks[j].style.background = "var(--gray-color)";
+				}
+				this.style.background = "#7edaf6";
+			})
+		};
+
+		var minorBtn = document.getElementsByClassName('minor-class-btn');
+		for (var i = 0; i < minorBtn.length; i++) {
+			minorBtn[i].addEventListener('click', function () {
+				for (var j = 0; j < minorBtn.length; j++) {
+					minorBtn[j].style.background = "white";
+					minorBtn[j].style.color = "black";
+				}
+				this.style.background = "#7edaf6";
+				this.style.color = "white";
+			})
+		};
+	</script>
+</body>

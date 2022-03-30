@@ -1,0 +1,189 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=10, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="/js/jquery/css/swiper.min.css"/>
+<script type="text/javascript" src="/js/jquery/swiper.min.js"></script>
+<script>
+    $(document).ready(function() {
+     var swiper = new Swiper('.swiper-container', {
+		        spaceBetween: 0,
+		        centeredSlides: true,
+		        autoplay: {
+		        	delay: 3000,
+		          	disableOnInteraction: false,
+				},
+				navigation: {
+					nextEl: '.swiper-button-next',
+					prevEl: '.swiper-button-prev',
+				},
+				loop : true,
+		        speed : 1000
+		});
+      var all_club = $('.all_club');
+        $(all_club).click(function(){
+                //   $(this).addClass('on');
+                //   all_club.not($(this)).removeClass('on');
+            var  club_value = $(this).attr('value');
+            window.location.href = "member_officer_list?century=<%=century%>&num_type="+club_value;
+      });
+
+      $('#searchAction').click(function() {
+        var text = $("#search_text").val();
+        if(text == ''){
+            return false;
+        }
+        window.location.href = "member_officer_list?century=<%=century%>&search_text="+text;
+		});
+
+    });
+	$(document).ready(function(){
+		var header_h = $(".header").outerHeight(true),
+			sub_h = $(".sub_head").outerHeight(true),
+			cont_t = $(".club_cont").outerHeight(true),
+			padding_h = header_h + sub_h;
+				
+			//$(".club_cont").css("top", padding_h)
+			$(".club_div").css("padding-top", padding_h)
+		
+	})
+
+
+
+</script>
+
+
+<style>
+    .swiper-container { width: 100%;   border-radius: 10px; background-size: cover;}
+	.swiper-wrapper{ overflow: visible;height: 150px; }
+	.swiper-slide { text-align: center;font-size: 18px; background: #fff; 
+	    display: -webkit-box;
+		display: -ms-flexbox;
+		display: -webkit-flex;
+		display: flex;
+		-webkit-box-pack: center;
+		-ms-flex-pack: center;
+		-webkit-justify-content: center;
+		justify-content: center;
+		-webkit-box-align: center;   
+		-ms-flex-align: center;
+	 }
+	 .content_img img{width: 100%;height: 92%;border-radius: 10px;}
+
+.swiper-slide a, .swiper-slide img{ width:100%; vertical-align: top;height: 110px;}
+.swiper-txt{font-size: 15px; margin-bottom: 7px;font-weight: 500;}
+    
+    
+</style>
+
+<div class="club_div">
+    <input type="hidden" class="num_type">
+        <div class="search_wrap_view"> 
+        <!-- <div class="select_box"> -->
+            <!-- <select name="branch_type" id="branch_type"></select> -->
+        <!-- </div> -->
+        <!--<div class="select_box">
+            <select name="search_type" id="search_type"></select>
+        </div>-->
+
+        <div class="search_field">
+            <input type="text" name="search_text" id="search_text" placeholder="&nbsp;검색어를 입력하세요">
+            <button id="searchAction"><i class="fa fa-search fa-lg"></i></button>
+        </div> 
+         <!-- <div class="search_btn">
+            <button id="searchAction"><i class="fa fa-search fa-lg"></i></button>
+        </div> -->
+     </div>
+   <div class="club_cont_parant">
+     <div class="club_cont">
+        <div class="all_club one_club sc" value="num1">
+            <p>지구<br>집행부</p>
+        </div>
+        <div class="all_club two_club sc" value="num2">
+            <p>지구고문</p>
+        </div>
+        <div class="all_club three_club sc" value="num3">
+            <p>총재<br>특별보좌</p>
+        </div>
+        <div class="all_club four_club sc" value="num4">
+            <p>연수<br>부원장</p>
+        </div>
+    </div>
+    <div class="club_cont"> 
+        <div class="all_club five_club sc" value="num5">
+            <p>특별<br>위원장</p>
+        </div>
+        <div class="all_club six_club sc" value="num6">
+            <p>지역<br>부총재</p>
+        </div>
+        <div class="all_club seven_club sc" value="num7">
+            <p>상임지대<br>위원장</p>
+        </div>
+        <div class="all_club eight_club sc" value="num8">
+            <p>특별<br>부위원장</p>
+        </div>
+    </div>
+    <div class="club_cont"> 
+        <div class="all_club five_club sc" value="num9">
+            <p>지대<br>위원장</p>
+        </div>
+        <div class="all_club six_club sc" value="num10">
+            <p>분과<br>위원장</p>
+        </div>
+        <div class="all_club seven_club sc" value="num11">
+            <p>홍보위원</p>
+        </div>
+    </div>
+</div>
+ 
+
+
+
+<div class="swiper-container"> 
+		<div class="swiper-wrapper">
+			<%
+				for(var i = 0; i < banner_data.length; i++){
+			%>
+					
+					<div class="swiper-slide">
+						<div class="content_wrap">
+							<div class="content_img">
+								<a href ="/hongbo_board_view?brd_no=<%=banner_data[i].board_no%>"><img src="/file/hongbo_board/<%=banner_data[i].file_dtname%>" alt=""  /></a>
+                            </div>
+                            <div class="swiper-txt">
+                                <span style="color: #f47708;">[<%= banner_data[i].area_club %>]&nbsp; </span>
+                                <span style="color: #236da0;"><%= banner_data[i].orgmem_name %>&nbsp; &nbsp;</span>
+                                <span><a href='tel:<%= banner_data[i].phone %>'><i class="fas fa-phone-alt"></i>&nbsp;<%= banner_data[i].phone %></a></span>
+                            </div>
+							<!-- 
+							<div class="content_info">
+								<div class="company_name"><%=banner_data[i].orgmem_office_nm%></div>
+								<div class="company_ceo" style="padding-top:10px;">
+									<span class="key">이름 : </span>
+									<span class="val"><%=banner_data[i].orgmem_name%> (<%=banner_data[i].orgmem_seqNo%>회) <%=banner_data[i].orgmem_major_nm%>과</span>
+								</div>
+								<div class="company_tel">
+									<span class="key">TEL : </span>
+									<span class="val"><%=banner_data[i].orgmem_phone%></span>
+								</div>								
+								<div class="company_cat">
+									<span class="key">소개 : </span>									
+									<span class="val"><%=banner_data[i].board_content%></span>
+								</div>
+							</div>
+							 -->
+						
+						<!-- <div class="txt_wrap">
+							<span>
+							<%= banner_data[i].board_title %>
+							</span>
+						</div> -->
+					  </div>
+					</div>
+					
+			<%
+				}
+			%>
+		</div>		
+	</div>	
+
+
+
+</div>

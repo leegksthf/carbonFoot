@@ -1,0 +1,123 @@
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#org_search").click(function(e){
+		e.preventDefault();
+		
+		var cw=screen.availWidth;     //화면 넓이
+		var ch=screen.availHeight;    //화면 높이
+		var sw=1000;    //띄울 창의 넓이
+		var sh=530;    //띄울 창의 높이
+		var ml=(cw-sw)/2;        //가운데 띄우기위한 창의 x위치
+		var mt=(ch-sh)/2;         //가운데 띄우기위한 창의 y위치
+		
+	    window.open('/admin/web/orgm_list_popup','org_search','width='+sw+',height='+sh+',top='+mt+',left='+ml+',resizable=no,scrollbars=yes');
+	});	
+	
+	$("#btn").click(function() {
+		var title = $("#title").val();
+		var orgmem_no = $("#orgmem_no").val();
+		var homepage = $("#homepage").val();
+		var strt_dt = $("#strt_dt").val();
+		var end_dt = $("#end_dt").val();
+		
+		if (title == "") {
+			alert("제목을 입력하세요.");
+			$("#title").focus();
+			return false;
+		}
+		/* else if(strt_dt == ""){
+			alert("적용시작일자를 입력하세요.");
+			$("#strt_dt").focus();
+			return false;
+		}else if(end_dt == ""){
+			alert("적용종료일자를 입력하세요.");
+			$("#end_dt").focus();
+			return false;
+		} */
+		
+		if(confirm("저장하시겠습니까?")){
+			$("#bannerForm").attr("action","banner_save");
+			$("#bannerForm").submit();
+		}
+	});
+	
+	//달력 - 판매일자
+	$(".datepicker").datepicker({
+	    showButtonPanel: true,		    
+	    closeText:'닫 기',
+		prevText:'이전달',
+		nextText:'다음달',
+		currentText:'오늘',
+	    changeYear: true,		
+		monthNames:['1월(JAN)','2월(FEB)','3월(MAR)','4월(APR)','5월(MAY)','6월(JUM)','7월(JUL)','8월(AUG)','9월(SEP)','10월(OCT)','11월(NOV)','12월(DEC)'],
+		dayNamesMin:['일','월','화','수','목','금','토'],
+		dateFormat:'yy-mm-dd'		
+	});	
+});
+
+function file_del(no, name) {
+	if(confirm("실제 파일이 삭제됩니다 \n정말 삭제하시겠습니까?")){
+		$('#file_name').val(name);
+		$("#bannerForm").attr("action", "banner_file_del");
+		$("#bannerForm").submit();
+	}
+}
+</script>
+	<h2><span class="float_l">배너</span><img src="../../../images/admin/btn_close.gif" alt="" class="float_r hand" onclick="window.close();"/></h2>
+	<div class="content">
+		<form action="" id="bannerForm" method="post" enctype="multipart/form-data" autocomplete="off">
+			<input type="hidden" name="file_no" value="" id="file_no"/>
+			<input type="hidden" name="file_name" value="" id="file_name"/>
+			<% if(data.length > 0) {%>
+				<input type="hidden" name="mode" value="modify"/> 
+				<input type="hidden" id="idx" name="idx" value="<%=data[0].idx %>"/>
+			<% }else{ %>
+				<input type="hidden" name="mode" value="write"/>
+			<% } %>
+			<table>
+				<colgroup>
+					<col width="18%"/>
+					<col width="32%"/>
+					<col width="18%"/>
+					<col width="32%"/>
+				</colgroup>
+				<tr>
+					<th>제목</th>
+					<% if(data.length > 0) {%>
+						<td colspan="3"><input type="text" id="title" name="title" value="<%=data[0].title %>" style="ime-mode:active;"/></td>
+					<% }else{ %>
+						<td colspan="3"><input type="text" id="title" name="title" style="ime-mode:active;"/></td>
+					<% } %>
+				</tr>
+				<tr style="display:none;">
+					<th>적용기간</th>
+					<td colspan="3">
+					<% if(data.length > 0) {%>
+						<input type="text" id="strt_dt" name="strt_dt" class="datepicker" value="<%=data[0].strt_dt %>" style="width:100px;" readonly /> ~ <input type="text" id="end_dt" name="end_dt" class="datepicker" value="<%=data[0].end_dt %>" style="width:100px;" readonly />
+					<% }else{ %>
+						<input type="text" id="strt_dt" name="strt_dt" class="datepicker" style="width:100px;" readonly /> ~ <input type="text" id="end_dt" name="end_dt" class="datepicker" style="width:100px;" readonly />
+					<% } %>
+					</td>
+				</tr>
+				<tr>
+					<th>배너이미지</th>
+					<td colspan="3">
+						<% if(data.length > 0 && data[0].file_dtname != null) { %>
+							<li>
+							<%=data[0].file_name %>
+							<a href="#" onclick="javascript:file_del('<%=data[0].idx %>','<%=data[0].file_dtname %>');">
+								<img src="../../../images/admin/icon_delete.gif" alt="삭제" />
+							</a>
+							</li>
+						<% }else{%>
+						<input type="file" id="brdFileMainImg[0]" name="brdFileMainImg[0]" value="" />
+						<% }%>
+					</td>
+				</tr>				
+			</table>
+		</form>
+		<p class="btn">
+			<button class="btn_big_blue hand" id="btn">등록</button>
+			<button class="btn_big_black hand" id="btn_bak" onclick="window.close();">취소</button>
+		</p>
+	</div>

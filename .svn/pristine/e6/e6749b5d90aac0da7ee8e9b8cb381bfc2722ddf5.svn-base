@@ -1,0 +1,93 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=10, user-scalable=yes" />
+<script src="/js/common.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		/*page_navi*/
+		var page_navi = tag_place("<%=page_navi%>");
+		$('#page_navi').html(page_navi);
+		/*page_navi*/
+		
+		$('.board_view').click(function() {
+			var form = document.boardForm;
+			form.action = 'hongbo_board_view?century=<%=century%>';
+			
+			$('input[name="brd_no"]').val($(this).attr('brd_no'));
+			//form.submit();
+			var url = "/hongbo_board_view?century=<%=century%>&brd_no="+$(this).attr('brd_no');
+			window.location.href = url;
+		});
+	
+		$('#go_write').click(function () {
+			window.location.href="hongbo_board_write?century=<%=century%>";
+		});
+	});
+	
+	function goPage(p_num){
+		var frm = document.boardForm;
+		frm.action = 'hongbo_board_list?century=<%=century%>';
+		frm.nowPage.value = p_num;
+		frm.submit();
+	}
+	
+	$(document).ready(function(){
+		var header_h = $(".header").outerHeight(true),
+			sub_h = $(".sub_head").outerHeight(true),
+			menu_h = $(".exu_menu").outerHeight(true),
+			padding_h = header_h + sub_h + menu_h;
+				
+			$("#container").css("padding-top", padding_h)
+		})
+	
+</script>
+<div id="container">
+	<div class="gallery_list_wrapper">
+		<form name="boardForm" method="post" onsubmit="return false;" autocomplete="off">
+			<input type="hidden" name="nowPage" value="<%=nowPage%>"/>
+			<input type="hidden" id="phone" name="phone" value="" />
+			<input type="hidden" id="brd_no" name="brd_no" value="" />
+			
+			<div class="member_menu exu_menu">
+				<ul>
+					<li><a href="/board_list">공지사항</a></li>
+					<li><a href="/gallery_board_list" class="active">갤러리</a></li>
+					<li><a href="/event_board_list">행사참석</a></li>
+				</ul>
+	
+			</div>
+			<div class="gallary_wrapper">
+				<% for(var i = 0; i < data.length; i++) {%>
+				<div class="gallary_item board_view" brd_no="<%=data[i].board_no %>" brd_cnt="<%=data[i].board_cnt %>">
+					<div class="gallary_img">
+						<%	if(data[i].img_file_name == ''){%>
+						<img src="/images/admin/noimg_hongbo.gif" alt="" />
+						<%	}else{%>
+						<img src="/file/hongbo_board/<%=data[i].img_file_name%>" alt="" />
+						<%	}%>
+					</div>
+					<div class="gallary_title">
+						<%=data[i].board_title %>
+					</div>
+					<p class="gallery_date"><%=data[i].c_date %></p>
+					<div class="gallary_author">
+						<%=data[i].orgmem_name %>
+					</div>
+				</div>
+				<% } %>
+				<% if(data.length == 0) {%>
+				<p style="background:#ffffff;padding:50px 0;text-align:center;margin-bottom:20px;">
+					등록된 게시물이 없습니다.
+				</p>
+				<% }%>
+			</div>
+		</form>
+	</div>
+	<div class="admin_paging" id="page_navi" align="center">
+	</div>
+	<% if(connectorDivision == "admin") 	{%>
+	<p class="float_r" align="right" >
+		<input type="button" value="등록" class="btn_mint btn_round" id="go_write" />
+	</p>
+	<% } %>
+</div>
+<!-- //컨텐츠 -->

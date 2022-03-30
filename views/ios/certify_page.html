@@ -1,0 +1,270 @@
+<script type="text/javascript">
+$(document).ready(function() {
+	/*var devToken = decodeURIComponent($.urlParam('devToken'));
+	var deviceModel = decodeURIComponent($.urlParam('deviceModel'));
+	var deviceVersion = decodeURIComponent($.urlParam('deviceVersion'));*/
+	
+	var devToken = getURLParam("devToken");
+	var deviceModel = getURLParam("deviceModel");
+	var deviceVersion = getURLParam("deviceVersion");
+	/*
+	$('#locForm #devToken').val(devToken);
+	$('#locForm #deviceModel').val(deviceModel);
+	$('#locForm #deviceVersion').val(deviceVersion);
+	$('#locForm').submit();*/
+	//alert("devToken=="+devToken+"\ndeviceModel=="+deviceModel+"\ndeviceVersion=="+deviceVersion);
+	if(devToken == null || devToken == "" || devToken == '(null)') {
+		$('#sms_before').hide();
+		$('#sms_after').hide();
+		$('#failed_div').show();
+	} else {
+		$('input[name="devToken"]').val(devToken);
+		$('input[name="deviceModel"]').val(deviceModel);
+		$('input[name="deviceVersion"]').val(deviceVersion);
+	}
+	
+	$('input[name="certify_btn"]').live('click', function(){
+
+		var user_name = $('input[name="user_name"]').val().replace(/(\s*)/g, "");
+		if(user_name == "") {
+			msg_show('이름을 입력하세요.');
+			$('input[name="user_name"]').val("");
+			return false;
+		} else {
+			$('input[name="user_name"]').val(user_name);
+		}
+		
+		var user_phoneNumber = $('input[name="user_phoneNumber"]').val().replace(/(\s*)/g, "");
+		if(user_phoneNumber == "") {
+			msg_show( "휴대번호를 입력하세요." );
+			$('input[name="user_phoneNumber"]').val("");
+			return false;
+		} else if(user_phoneNumber.length < 7 || user_phoneNumber.length > 8) {
+			msg_show( "올바른 휴대번호를 입력하세요." );
+			$('input[name="user_phoneNumber"]').val("");
+			return false;
+		} else {
+			$('input[name="user_phoneNumber"]').val(user_phoneNumber);
+		}
+
+		$.ajax({
+			type : "post",  
+		    url : "/ios_user_check",   
+		    dataType : "json",
+		    data : $('form[name="certify_form"]').serialize(),
+		    success : function(data){
+		    	if(data.result) {
+			    	$.ajax({
+						type : "post",  
+					    url : "/ios_user_check_sms_send", 
+					    data : { orgmem_no: data.orgmem_no, receive_number : data.orgmem_phone, certification_num : data.certification_num },
+					    dataType : "json",
+					    success : function(json){
+				    		msg_show(json.result_msg);
+					    	if(json.result) {
+					    		$('input[name="user_orgmem_phone"]').val( data.orgmem_phone );
+					    		$("#certification_num_div").html(json.result_tag_textInput);
+					    		$("#certification_num_div_btn").html(json.result_tag_buttonInput);
+						    	$("#sms_before").hide();
+						    	$("#sms_after").show();
+					    	} else {
+					    		window.location.href = "/certify_intro";
+					    	}
+					    }, error : function(xhr, status, error) {
+					    	msg_show( "승인번호 발송에 문제가 있습니다." );
+				      	}
+					});
+		    	} else {
+		    		$("#sms_before").hide();
+			    	$('#check_fail').show();
+		    	}
+		    }, error : function(xhr, status, error) { // error 발생했을때
+		    	$("#sms_before").hide();
+				$("#check_fail").show();
+	      	}
+		});	
+	});
+	
+	$('input[name="certification_num_clickBtn"]').live('click', function(){
+		var orgmem_no = $('input[name="user_orgmem_no"]').val();
+		var orgmem_phone = $('input[name="user_orgmem_phone"]').val();
+		var certification_num = $('input[name="user_certification_num"]').val();
+		
+		var devToken = $('input[name="devToken"]').val();
+		var deviceModel = $('input[name="deviceModel"]').val();
+		var deviceVersion = $('input[name="deviceVersion"]').val();
+		
+		$.ajax({
+			type : "post",  
+		    url : "/ios_user_check_last_proc",
+		    data : { 
+		    			orgmem_no: orgmem_no,
+		    			orgmem_phone : orgmem_phone,
+		    			certification_num : certification_num,
+		    			devToken : devToken,
+		    			deviceModel : deviceModel,
+		    			deviceVersion : deviceVersion
+		    		},
+		    dataType : "json",
+		    success : function(json){
+		    	msg_show( json.result_msg );
+		    	if(json.result) {
+		    		window.location.href = "/ios_index?key_num="+devToken;
+		    	}
+		    }, error : function(xhr, status, error) {
+		    	msg_show( "승인번호 처리에 문제가 있습니다." );
+	      	}
+		});
+	});
+});
+
+function msg_show(msg) {
+	$( "#dialog-message" ).dialog({
+		modal: true,
+		open: function(){
+			$( "#dialog-message" ).html("").html(msg).css({"text-align":"center", "vertical-align":"middle", "min-height":"15px", "margin-top":"5px", "font-weight":"bold"} );
+			$( ".ui-dialog-titlebar-close" ).hide();
+		},
+		buttons: {
+			'확인' : function() {
+				$( this ).dialog( "close" );
+			}
+      }
+    });
+}
+
+function CheckOnlyNumber_ios(TextBoxControl) {
+	inputValue = TextBoxControl.value.replace(/ /g, "");
+	if (inputValue.replace(/\d/g, "").length != 0) {
+		msg_show("숫자만 입력해주세요.");
+		TextBoxControl.value = "";
+		TextBoxControl.focus();
+		return false;
+	}
+	return true;
+}
+function getURLParam(strParamName) {
+	var strReturn = "";
+	var strHref = window.location.href;
+	var bFound=false;
+
+	var cmpstring = strParamName + "=";
+	var cmplen = cmpstring.length;
+
+	if ( strHref.indexOf("?") > -1 ){
+		var strQueryString = strHref.substr(strHref.indexOf("?")+1);
+		var aQueryString = strQueryString.split("&");
+		for ( var iParam = 0; iParam < aQueryString.length; iParam++ ){
+			if (aQueryString[iParam].substr(0,cmplen)==cmpstring){
+				var aParam = aQueryString[iParam].split("=");
+				strReturn = aParam[1];
+				bFound=true;
+				break;
+			}
+		}
+	}
+	if (bFound==false) return null;
+	return strReturn;
+}
+
+</script>
+<form id="locForm" name="locForm" method="get" action="/">
+	<input type="hidden" name="devToken" id="devToken" />
+	<input type="hidden" name="deviceModel" id="deviceModel" />
+	<input type="hidden" name="deviceVersion" id="deviceVersion" />
+</form>
+
+<input type="hidden" name="user_orgmem_phone" />
+<input type="hidden" name="devToken" />
+<input type="hidden" name="deviceModel" />
+<input type="hidden" name="deviceVersion" />
+	 
+ <div id="sms_before" style="width:100%; height:100%; text-align:center; vertical-align: middle;">
+	<!-- <input type="text" name="user_orgmem_no" />
+	<input type="text" name="user_certification_num" /> -->
+	
+	<form name="certify_form">
+	<div class="table02">
+		<p>휴대전화 번호와 입력한 휴대전화 번호가 같아야 인증번호를 받을 수 있습니다.</p>
+		<table>
+			<colgroup>
+				<col width="30%" />
+				<col />
+			</colgroup>
+			<tr>
+				<th>이름</th>
+				<td><input type="text" name="user_name" style="ime-mode:active;" maxlength="10" /></td>
+			</tr>
+			<tr>
+				<th>휴대전화</th>
+				<td>
+					<select name="phone_select">
+						<option value="010">010</option>
+						<option value="011">011</option>
+						<option value="016">016</option>
+						<option value="017">017</option>
+						<option value="018">018</option>
+						<option value="019">019</option>
+					</select>
+					&nbsp;-&nbsp;
+					<input type="text" name="user_phoneNumber" onkeyup="CheckOnlyNumber_ios(this);" maxlength="8" />
+				</td>
+			</tr>
+		</table>
+		<input type="button" value="인증번호 받기" name="certify_btn" class="btn_blue btn_round mt_20">
+	</div>
+	</form>
+</div>
+
+<div id="sms_after" style="width:100%; height:100%; margin-top:130px; text-align:center; vertical-align: middle; display: none;">
+	<form name="sms_after_form">
+		<div class="table02">
+			<p>SMS 인증번호를 입력하여 주시기 바랍니다.</p>
+			<table>
+				<colgroup>
+					<col width="30%" />
+					<col >
+				</colgroup>
+				<tr>
+					<th>인증번호</th>
+					<td><div id="certification_num_div"></div></td>
+				</tr>
+			</table>
+			<div id="certification_num_div_btn"></div>
+		</div>
+		<!-- <strong>인증번호</strong> : <div id="certification_num_div" style="display: inline;"></div> -->
+	</form>
+</div>
+
+<div id="check_fail" style="display: none;">
+	<div class="advise">
+		<p>국제라이온즈협회에 관심을 가져 주셔서 감사합니다.</p>
+		<p class="strong">현재 귀하는 인증절차가 필요합니다.</p>
+		<p>국제라이온즈협회 관리자에게 문자주세요.</p>
+		<p>이름, 출생년도, 입학년도를 보내주시면 신속히 처리하겠습니다.</p>
+	</div>
+	
+	<p class="align_c mt_20">
+		<a href="tel:053-756-0309"><button class="btn_blue btn_round">전화 문의하기</button></a>
+		<!-- <a href="sms:010-8585-2693"><button class="btn_black btn_round" onclick=''>문자보내기</button></a> -->
+		<!-- <a href="sms:010-3803-9128;010-2042-1000;010-3517-3337"><button class="btn_black btn_round" onclick=''>문자보내기</button></a> -->
+	</p>
+</div>
+
+<div id="failed_div" style="display: none;">
+	<div class="advise">
+		<p>국제라이온즈협회에 관심을 가져 주셔서 감사합니다.</p>
+		<p class="strong">현재 인증절차에 문제가 발생되었습니다.</p>
+		<p class="strong">앱(App)을 완전히 종료 후 다시 시도하시기 바랍니다.</p>
+		<p>만약, 지속적으로 본 안내문이 보이면 국제라이온즈협회 관리자에게 문자주세요.</p>
+		<p>이름, 출생년도, 입학년도를 보내주시면 신속히 처리하겠습니다.</p>
+	</div>
+	
+	<p class="align_c mt_20">
+		<a href="tel:053-756-0309"><button class="btn_blue btn_round">전화 문의하기</button></a>
+		<!-- <a href="sms:010-8585-2693"><button class="btn_black btn_round" onclick=''>문자보내기</button></a> -->
+		<!--<a href="sms:010-3803-9128,010-2042-1000,010-3517-3337"><button class="btn_black btn_round" onclick=''>문자보내기</button></a> -->
+	</p>
+</div>
+
+<div id="dialog-message" title="국제라이온즈협회"></div>

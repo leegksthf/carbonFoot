@@ -1,0 +1,57 @@
+
+		<%if(menuNum!=null){%>
+		<!-- 하단메뉴 -->
+			<div id="footer">
+				<ul style="display: flex;">
+					<li>
+						<a href="greeting">
+							<div class="footer_icon_box footer_icon_box01"></div>
+							<p>3662지구</p>
+						</a>
+					</li>
+					<li>
+						<a href="advisory">
+							<div class="footer_icon_box footer_icon_box02"></div>
+							<p>지구임원</p>
+						</a>
+					</li>
+					<li>
+						<a href="club_view">
+							<div class="footer_icon_box footer_icon_box03"></div>
+							<p>클럽현황</p>
+						</a>
+					</li>
+					<li>
+						<a href="members_view">
+							<div class="footer_icon_box footer_icon_box04"></div>
+							<p>회원검색</p>
+						</a>
+					</li>
+					<li>
+						<a href="community">
+							<div class="footer_icon_box footer_icon_box05"></div>
+							<p>커뮤니티</p>
+						</a>
+					</li>
+					<li>
+						<a href="excutive">
+							<div class="footer_icon_box footer_icon_box06"></div>
+							<p>회원사찾기</p>
+						</a>
+					</li>
+					<li>
+						<a href="bizroom">
+							<div class="footer_icon_box footer_icon_box07"></div>
+							<p>BIZ홈</p>
+						</a>
+					</li>
+					<!--<li style="width: 13%;"><a href="member_list?century=2020"><i class="fa fa-university fa-2x"></i><br />위원회</a></li>-->
+					<!-- <li><a href="event_board_list"><i class="fa fa-check-square fa-2x"></i><br />행사참석</a></li> -->
+					<!--<li><a href="member_officer_view?century=2020"><i class="fa fa-user-friends fa-2x"></i><br />임원검색</a></li>-->
+				</ul>
+			</div>
+		<!-- //하단메뉴 -->
+		<%}%>
+		<div id="scroll_end"></div>
+	</body>
+</html>

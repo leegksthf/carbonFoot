@@ -1,0 +1,235 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=10, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="/js/jquery/css/swiper.min.css"/>
+<script type="text/javascript" src="/js/jquery/swiper.min.js"></script>
+<script>
+       $(document).ready(function() {
+   	    /* if(window.innerHeight >='568' && window.innerHeight <= '639'){
+       		$('.area_club').css('height','72px');
+       	}else if(window.innerHeight >= '640' && window.innerHeight <= '712'){
+       		$('.area_club').css('height','145px');
+       	}else if(window.innerHeight >= '713' && window.innerHeight <= '785'){
+       		$('.area_club').css('height','217px');
+       	}else if(window.innerHeight >= '786' && window.innerHeight <= '858'){
+       		$('.area_club').css('height','289px');
+       	}else if(window.innerHeight >= '859' && window.innerHeight <= '1000'){
+       		$('.area_club').css('height','361px');
+       	}else{
+       		$('.area_club').css('height','361px');
+       	} */
+     var swiper = new Swiper('.swiper-container', {
+		       autoplay: {
+		         	delay: 3000,
+		          	disableOnInteraction: false,
+		         },
+				speed : 1000,
+				slidesPerView: 'auto',
+				centeredSlides: true,
+				slidesPerView: 'auto',
+				loop:true,
+				loopAdditionalSlides: 1,
+				loopFillGroupWithBlank: true,
+				spaceBetween: 15,
+		});
+      var all_club = $('.all_club');
+        $(all_club).click(function(){
+          $(this).addClass('on2');
+          all_club.not($(this)).removeClass('on2');
+       var  club_value = $(this).attr('value');
+       $('.num_type').val(club_value);     
+	   $(".area_club").empty();
+	if(club_value != 'all'){
+	   $.ajax({
+		type : "POST",
+        url : "/club_view_data",
+        dataType : "json",
+        data : {
+			club_value:club_value
+       	}, success : function(json) {
+            var ment = makeText(json.db_data);
+			$(".area_club").append(ment);
+           }
+		}); 
+	}else{
+		window.location.href = "members_list?num_type="+club_value;
+	}
+		});
+		
+	$('#searchAction').click(function() {
+        var text = $("#search_text").val();
+        if(text == ''){
+            alert("검색어를 입력해주세요");
+            return false;
+        }
+        window.location.href = "members_list?century=<%=century%>&search_text="+text+"&num_type=all";
+	});
+    });
+
+function makeText(json){
+    var text = "";
+    for (var i = 0; i < json.length; i++) {
+    if(i == 0){
+    text += '<div class="club_'+i+'">'; 
+    }
+     text += '<div class="club_view" onclick="club_view(\''+json[i].club_name +'\')">';
+     text += '<p>'+ '<span>' + json[i].club_name2 + '</span>'+json[i].club_year+'주년'+'  </p>';
+     text  += '</div>'; 
+    if(i == 3){
+        text  += '</div>';
+        text += '<div class="club_'+i+'">';
+    } 
+      if(i == 7){
+        text  += '</div>';
+        text += '<div class="club_'+i+'">';
+    }
+    if(i == 11){
+        text  += '</div>';
+        text += '<div class="club_'+i+'">';
+    }
+    if(i == 15){
+        text  += '</div>'; 
+    }
+      
+
+
+    }
+    return text;
+}
+  
+function club_view(club_type){
+    var num_type = $('.num_type').val();  
+    //    $.ajax({
+    //    type : "POST",
+    //    url : "/club_list",
+    //    dataType : "json",
+    //    data : {
+    //     area_zone_type:area_zone_type,
+    //     num_type:num_type
+    //       }, success : function(json) {
+    //       }
+    //    }); 
+      window.location.href = "members_list?century=<%=century%>&num_type="+num_type+"&club_type="+club_type;
+}
+$(document).ready(function(){
+		var header_h = $(".header").outerHeight(true),
+			sub_h = $(".sub_head").outerHeight(true),
+			cont_t = $(".club_cont").outerHeight(true),
+			padding_h = header_h + sub_h;
+				
+			//$(".club_cont").css("top", padding_h)
+			$(".club_div").css("padding-top", padding_h)
+		
+	})
+
+
+</script>
+
+
+<style>
+    .swiper-container {width: 100%;   background-size: cover; border-radius: 10px;}
+	.swiper-wrapper{ overflow: visible;height: 150px; }
+	.swiper-slide { text-align: center;font-size: 18px; background: #fff; 
+	    display: -webkit-box;
+		display: -ms-flexbox;
+		display: -webkit-flex;
+		display: flex;
+		-webkit-box-pack: center;
+		-ms-flex-pack: center;
+		-webkit-justify-content: center;
+		justify-content: center;
+		-webkit-box-align: center;
+		-ms-flex-align: center;
+	 }
+
+.swiper-txt{font-size: 15px; margin-bottom: 7px;font-weight: 500;}
+    
+    
+</style>
+
+<div class="club_div" style="padding-bottom: 15px;">
+    <input type="hidden" class="num_type">
+    <div class="search_wrap_view"> 
+			<div class="select_name">
+				<p>회원검색</p>
+			</div>
+			<!--<select name="" id="">
+				<option value="회원검색">회원검색</option>
+				<option value="클럽검색">클럽검색</option>
+				<option value="회원사검색">회원사검색</option>
+			</select>-->
+	        <div class="search_field">
+	            <input type="text" placeholder="회원이름을 입력하세요." onfocus="this.placeholder=''" onblur="this.placeholder='회원이름을 입력하세요.'" />
+				<button>
+					<img src="/images/search_btn.svg" alt="검색버튼">
+				</button>
+	        </div>
+        </div>
+    <div class="club_cont">
+        <div class="all_club one_club sc" value="1지역">
+            <p>1지역</p>
+        </div>
+        <div class="all_club two_club sc" value="2지역">
+            <p>2지역</p>
+        </div>
+        <div class="all_club three_club sc" value="3지역">
+            <p>3지역</p>
+        </div>
+        <div class="all_club four_club sc" value="4지역">
+            <p>4지역</p>
+        </div>
+        <div class="all_club five_club sc" value="5지역">
+            <p>5지역</p>
+        </div>
+        <div class="all_club six_club sc" value="6지역">
+            <p>6지역</p>
+        </div>
+        <div class="all_club seven_club sc" value="7지역">
+            <p>7지역</p>
+        </div>
+        <div class="all_club eight_club sc" value="8지역">
+            <p>8지역</p>
+        </div>
+		<div class="all_club five_club" value="9지역">
+			<p>9지역</p>
+		</div>
+		<div class="all_club six_club" value="10지역">
+			<p>10지역</p>
+		</div>
+		<div class="all_club seven_club" value="11지역">
+			<p>11지역</p>
+		</div>
+		<div class="all_club eight_club" value="12지역">
+			<p>12지역</p>
+		</div>
+	</div>
+
+	<div class="area_club" ></div>
+
+
+
+</div>
+
+
+<div class="slide_ad swiper-container" style="padding-bottom: 10vh; height: auto;"> 
+		<div class="swiper-wrapper">
+			<%
+				for(var i = 0; i < banner_data.length; i++){
+			%>
+					
+					<a href ="/hongbo_board_view?brd_no=<%=banner_data[i].board_no%>" class="swiper-slide" style="height: 120px;">
+						<div class="content_wrap">
+							<div class="content_img">
+								<img src="/file/hongbo_board/<%=banner_data[i].file_dtname%>" alt=""  />
+							</div>
+							<!--<div class="swiper-txt">
+                                <span style="color: #f47708;">[<%= banner_data[i].area_club %>]&nbsp; </span>
+                                <span style="color: #236da0;"><%= banner_data[i].orgmem_name %>&nbsp; &nbsp;</span>
+                                <span><a href='tel:<%= banner_data[i].phone %>'><i class="fas fa-phone-alt"></i>&nbsp;<%= banner_data[i].phone %></a></span>
+                            </div>-->
+					  </div>
+					</a>
+					
+			<%
+				}
+			%>
+		</div>		
+	</div>	

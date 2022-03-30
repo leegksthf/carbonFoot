@@ -1,0 +1,106 @@
+<link href="/js/jquery/css/jquery-ui-1.8.2.custom.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="/js/jquery/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/js/jquery/jquery-ui-1.8.16.custom.min.js"></script>
+<script type="text/javascript" src="/js/jquery/jquery.validate.js"></script>
+<script src="/js/common.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$(".moveSeq").on("click",function(e){
+		e.stopPropagation();	
+	});
+	
+	$('.goview').click(function(){
+			var frm = document.codeForm;
+			frm.mode.value = 'child'; 
+			frm.search_code_group.value = $(this).attr('code_group');
+			frm.action = 'code_list_child';
+			frm.submit();
+	});
+	$('#codeWrite').click(function(){
+		alert(1);
+	});
+});      
+ 
+function delBtn(id){
+	if(confirm("삭제하시겠습니까?")){
+		var frm = document.codeForm;
+		frm.mode.value = 'parent';
+		frm.search_code_group.value = id;
+		frm.action = 'code_del';
+		frm.submit();
+	}
+}
+function writeBtn(theURL,  winName, features, mode){
+	window.open(theURL+"?mode="+mode+"&code_group="+'<%=code_group%>', winName, features);
+}
+function modifyBtn(theURL,  winName, features, mode, code){
+	window.open(theURL+"?mode="+mode+"&code_group="+code, winName, features);
+}
+</script>
+<form action="code_list" id="codeForm" name="codeForm" method="post" onsubmit="return false;" autocomplete="off">
+	<input type="hidden" name="mode" value=""/>
+	<input type="hidden" name="search_code_group" value=""/>
+	<div class="board_search">
+		<h3 class="float_l">코드관리</h3>
+		<!-- 코드 <input type="text" name="code_group" value="" maxlength="20"> 
+		코드명 <input type="text" name="code_name" value="" maxlength="20"> 
+		<input type="button" id="codeWrite" value="등록"  class="btn_small_black" /> -->
+	</div>
+	
+	<div class="board_list">
+		<table>
+			<colgroup>
+				<col width=""/>
+				<col width=""/>
+				<col width=""/>
+			</colgroup>
+			<thead>
+				<tr>
+					<th>
+						코드
+					</th>
+					<th>
+						코드명
+					</th>
+					<th>
+						비고
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<% data.forEach(function(item, index){ %>
+					<tr class="goview moveSeq hand" code_group="<%=item.code_group%>">
+						<td>
+							<%=item.code_group%>
+						</td>
+						<td>
+							<%=item.code_name%>
+						</td>
+						<td>
+							<a href="#" onclick="modifyBtn('code_write','','width=450,height=300', 'modify','<%=item.code_group%>')" class="moveSeq">
+								<img src="../../../images/admin/icon_edit.gif" alt="수정" />
+							</a> 
+							<a href="#" onclick="delBtn('<%=item.code_group%>');" class="moveSeq"><img src="/images/admin/icon_delete.gif" alt="삭제" /></a>
+						</td>
+					</tr>
+				<%});%>
+				<%if(data.length == 0){%>
+					<tr>
+						<td colspan="3">
+							등록된 자료이 없습니다.
+						</td>
+					</tr>
+				<%}%>
+			</tbody>
+		</table>
+	</div>
+</form>
+
+<div class="mt_20">
+	<p class="float_r">
+		<input type="button" value="등록" class="btn_big_blue" onclick="writeBtn('code_write','','width=450,height=300', 'write')" />
+	</p>
+</div>
+
+

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<title>로타리클럽</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=10, user-scalable=no" />
+	<!-- fontawesome -->
+	<link rel="stylesheet" type="text/css" href="css/all.css">
+
+	<link rel="stylesheet" type="text/css" href="css/default.css"/>
+	<link rel="stylesheet" type="text/css" href="css/layout.css"/>
+	<link rel="stylesheet" type="text/css" href="css/basic.css"/>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css" />
+	<link rel="stylesheet" type="text/css" href="/js/jquery/css/jquery-ui-1.8.2.custom.css"/>
+	<link rel="stylesheet" type="text/css" href="/js/jquery/css/swiper.min.css"/>
+
+	<script type="text/javascript" src="/js/jquery/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="/js/jquery/jquery-ui-1.8.16.custom.min.js"></script>
+	<script type="text/javascript" src="/js/jquery/swiper.min.js"></script>
+
+	<style>
+	   /*  .imgbox{
+	    margin:10px;
+	    text-align: center;
+	    background: url(images/line.png) ,url(images/line.png) ,url(images/line2.png) ,url(images/line2.png);
+	    background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
+	    background-position:bottom, top, left, right;
+	    } */
+
+	    
+    </style>
+
+	<script>
+		$(document).ready(function(){
+			if("<%=disp_yn%>" == 'y' || "<%=connectorDisp_yn%>" == 'y'){
+				location.href = '/fail2';
+			}
+			// var browserInfo = navigator.userAgent;	
+			// var filter = "win16|win32|win64|mac|macintel";
+			//  if ( navigator.platform ) { 
+			// 		if ( filter.indexOf( navigator.platform.toLowerCase() ) < 0 ) { 
+			// 			// alert("mobile");
+			// 				//mobile web
+			// 				if(browserInfo.indexOf("flash21_mmate")>-1){
+			// 					// alert("mobile app");
+			// 				}
+			// 				//mobile app
+			// 				else {
+			// 					// alert("mobile web");
+			// 					location.href = '/fail';
+			// 				}
+			// 		} else { //pc 
+			// 			location.href = '/fail';
+			// 		} 
+			// 	}
+ 		    var swiper = new Swiper('.swiper-container', {
+		         autoplay: {
+		         	delay: 3000,
+		          	disableOnInteraction: false,
+		         },
+				speed : 1000,
+				slidesPerView: 'auto',
+				centeredSlides: true,
+				slidesPerView: 'auto',
+				loop: true,
+				loopFillGroupWithBlank: true,
+				spaceBetween: 15,
+				
+				
+			
+			 });
+			
+			var header_h = $("#header").outerHeight(true),
+				quick_h = $(".main_quick").outerHeight(true),
+				bottom_h= $(".slide_ad").outerHeight(true),
+				top_h = header_h + quick_h,
+				all_h = $(window).outerHeight(true),
+				main_zone = all_h - top_h - bottom_h
+				
+			$(".main_zone").outerHeight( main_zone )
+			
+		});
+	</script>
+</head>
+
+<body>
+	<div id="header">
+		<a href="/"><img src="/images/rotary-logo-color-2019-simplified.svg" alt="cak" /></a>
+	</div>
+	
+	<div class="main_quick">
+		<div class="main_q_search">
+			<select name="" id="">
+				<option value="회원사검색">회원사검색</option>
+				<option value="클럽검색">클럽검색</option>
+				<option value="회원검색">회원검색</option>
+			</select>
+			<div class="search_text_area">
+				<input type="text" placeholder="키워드를 입력하세요." onfocus="this.placeholder=''" onblur="this.placeholder='키워드를 입력하세요.'" />
+				<button>
+					<img src="/images/main_search_btn.svg" alt="검색버튼" />
+				</button>
+			</div>
+		</div>
+		<ul class="main_quick_menu">
+			<li>
+				<a href="#">
+					<img src="/images/main_q01.svg" alt="국제로타리" />
+					<p>국제로타리</p>
+				</a>
+			</li>
+			<li>
+				<a href="#">
+					<img src="/images/main_q02.svg" alt="re 회장표어" />
+					<p>RI회장표어</p>
+				</a>
+			</li>
+			<li>
+				<a href="#">
+					<img src="/images/main_q03.svg" alt="한국 zone" />
+					<p>한국ZONE</p>
+				</a>
+			</li>
+			<li>
+				<a href="#">
+					<img src="/images/main_q04.svg" alt="로타리멤버쉽" />
+					<p>로타리멤버쉽</p>
+				</a>
+			</li>
+		</ul>
+	</div>
+	<div class="main_zone">
+		<ul>
+			<li class="zone_12"> <a href="#"><span>3590</span></a> </li>
+			<li class="zone_11"> <a href="#"><span>3600</span></a> </li>
+			<li class="zone_12"> <a href="#"><span>3610</span></a> </li>
+			<li class="zone_11"> <a href="#"><span>3620</span></a> </li>
+			<li class="zone_11"> <a href="#"><span>3630</span></a> </li>
+			
+			<li class="zone_11"> <a href="#"><span>3640</span></a> </li>
+			<li class="zone_11"> <a href="#"><span>3650</span></a> </li>
+			<li class="zone_12"> <a href="#"><span>3661</span></a> </li>
+			<li class="zone_12"> <a href="/index_detail"><span>3662</span></a> </li>
+			<li class="zone_12"> <a href="#"><span>3670</span></a> </li>
+			
+			<li class="zone_12"> <a href="#"><span>3680</span></a> </li>
+			<li class="zone_11"> <a href="#"><span>3690</span></a> </li>
+			<li class="zone_12"> <a href="#"><span>3700</span></a> </li>
+			<li class="zone_12"> <a href="#"><span>3710</span></a> </li>
+			<li class="zone_12"> <a href="#"><span>3721</span></a> </li>
+			
+			<li class="zone_12"> <a href="#"><span>3722</span></a> </li>
+			<li class="zone_11"> <a href="#"><span>3730</span></a> </li>
+			<li class="zone_11"> <a href="#"><span>3740</span></a> </li>
+			<li class="zone_11"> <a href="#"><span>3750</span></a> </li>
+		</ul>
+	</div>
+	<div class="slide_ad swiper-container">
+		<div class="swiper-wrapper">
+			<a class="swiper-slide">
+				<img src="/images/ad_ex.png" alt="광고예시" />
+			</a>
+			<a class="swiper-slide">
+				<img src="/images/ad_ex02.png" alt="광고예시" />
+			</a>
+			<a class="swiper-slide">
+				<img src="/images/ad_ex.png" alt="광고예시" />
+			</a>
+		</div>
+	</div>
+	
+
+
+
+	<!-- <img src="images/bg_cover.png" alt="" style="position:absolute; right:0; top:0;" /> -->
+    <!--상단-->
+	<!--//상단-->
+
+	<!-- 하단 -->
+	<!--<div id="footer">
+		<ul style="display: flex;">
+			<li ><a href="greeting"><i class="fa fa-globe-asia fa-2x"></i><br />국제협회</a></li>
+			<li ><a href="advisory"><i class="fa fa-network-wired fa-2x"></i><br />대구지구</a></li>
+			<li><a href="excutive"><i class="fa fa-user-tie fa-2x"></i><br />역대총재단</a></li>
+			<li><a href="member_list"><i class="fa fa-university fa-2x"></i><br />위원회</a></li>
+			 <li><a href="event_board_list"><i class="fa fa-check-square fa-2x"></i><br />행사참석</a></li>
+			<li><a href="member_officer_view"><i class="fa fa-user-friends fa-2x"></i><br />임원검색</a></li>
+			<li><a href="members_view"><i class="fa fa-search fa-2x"></i><br />회원검색</a></li>
+			<li><a href="club_view"><i class="fa fa-hand-holding-heart fa-2x"></i><br />클럽현황</a></li>
+			<li><a href="hongbo_board_list"><i class="fa fa-bullhorn fa-2x"></i><br />광고</a></li>
+		</ul>
+	</div> -->
+	<!-- //하단 -->
+</body>

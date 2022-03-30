@@ -1,0 +1,85 @@
+<script type="text/javascript">
+	$(document).ready(function() {
+		
+		/*page_navi*/
+		var page_navi = tag_place("<%=page_navi%>");
+		$('#page_navi').html(page_navi);
+		/*page_navi*/
+		
+		$('#banner_search').click(function(){
+			var search_type = $("select[name='search_type']").val();
+			$("#search_type").attr("value", search_type);
+			var frm = document.bannerForm;
+			frm.action = '/admin/web/banner_list';
+			frm.submit();
+		});
+		
+		$("#search_text").keydown(function(e){
+			if(e.keyCode == 13) $('#banner_search').click();
+		});
+		
+		$(".banner_del").click(function() {
+			var idx = $("#idx").val($(this).attr('idx'));
+			if (confirm("삭제하시겠습니까?")) {
+				var form = document.bannerForm;
+				form.action = '/admin/web/banner_del';	
+				form.submit();	
+			}
+		});
+	});
+	
+	function goPage(p_num){
+		var frm = document.bannerForm;
+		frm.action = 'banner_list';
+		frm.nowPage.value = p_num;
+		frm.submit();
+	}
+</script>
+
+	<form id="bannerForm" name="bannerForm" method="post" action="" onsubmit="return false;" autocomplete="off">
+		<input type="hidden" name="nowPage" value="<%=nowPage%>"/>
+		<input type="hidden" id="idx" name="idx" value="" />
+		<input type="hidden" id="search_type" name="search_type" value="title" />
+		<div class="board_search">
+			<h3 class="float_l">배너관리</h3>
+			<p class="float_r">
+				<input type="text" name="search_text" id="search_text" value="<%=search_text%>" style="ime-mode:active;"/>
+				<input type="button" id="banner_search" value="검색"  class="btn_big_blue"/>
+			</p>
+		</div>
+		<div class="gallery">
+			<ul>
+				<% for(var i = 0; i < data.length; i++){ %>
+					<li>
+						<p>
+						<%	if(data[i].img_file_name == ''){%>
+							<img src="/images/admin/noimg.gif" alt="" class="hand" onclick="MM_openBrWindow('/admin/web/banner_view','','width=550,height=400','<%=data[i].idx %>','view')" />
+						<%	}else{%>
+							<img src="/file/banner/<%=data[i].img_file_name%>" alt="" class="hand" onclick="MM_openBrWindow('/admin/web/banner_view','','width=550,height=400,scrollbars=1','<%=data[i].idx %>','view')" />
+						<%	}%>
+						</p>
+						<dl>
+							<dt class="hand" onclick="MM_openBrWindow('/admin/web/banner_view','','width=550,height=400,scrollbars=1','<%=data[i].idx %>','view')"><%=data[i].title %></dt>
+							<dd>
+								<a href="#" onclick="MM_openBrWindow('/admin/web/banner_write','','width=550,height=400,scrollbars=1', '<%=data[i].idx %>', 'modify')"><img src="../../../images/admin/icon_edit.gif" alt="수정" /></a>
+								<img class="banner_del hand" idx="<%=data[i].idx %>" src="../../../images/admin/icon_delete.gif" alt="삭제" />
+							</dd>
+						</dl>
+					</li>
+				<% } %>
+				
+				<%if(data.length == 0){%>
+					<p style="padding-top:50px;text-align:center;">
+						등록된 배너가 없습니다.
+					</p>
+				<%}%>
+			</ul>
+		</div>
+	</form>
+	<div class="mt_20">
+		<div class="paging" id="page_navi">
+		</div>
+		<p class="float_r">
+			<input type="button" value="등록" class="btn_big_blue" onclick="MM_openBrWindow('/admin/web/banner_write','','width=550,height=400','','write')" />
+		</p>
+	</div>

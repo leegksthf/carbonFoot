@@ -1,0 +1,146 @@
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#board_btn").click(function(){
+			location.href="board_write";
+		});
+		
+		/*page_navi*/
+		var page_navi = tag_place("<%=page_navi%>");
+		$('#page_navi').html(page_navi);
+		/*page_navi*/
+		
+		$('#brd_search').click(function(){
+			var search_type = $("select[name='search_type']").val();
+			$("#search_type").attr("value", search_type);
+			var frm = document.boardForm;
+			frm.action = '/admin/web/event_request_list';
+			frm.submit();
+		});
+		
+		$("#search_text").keydown(function(e){
+			if(e.keyCode == 13) $('#brd_search').click();
+		});
+		
+		$(".brd_del").click(function() {
+			var board_no = $("#board_no").val($(this).attr('brd_no'));
+			if (confirm("삭제하시겠습니까?")) {
+				var form = document.boardForm;
+				form.action = '/admin/web/request_board_del';	
+				form.submit();	
+			}
+		});
+
+		$("#btnExport").click(function() {
+			var frm = document.boardForm;
+			var url = "/admin/web/eventExceldown";
+
+			frm.action = url;
+			frm.method = "post";
+			frm.submit();
+		});
+		
+	});
+	
+	function brd_del() {
+		var board_no = $("#board_no").val($(this).attr('brd_no'));
+	}
+	
+	function goPage(p_num){
+		var frm = document.boardForm;
+		frm.action = 'board_list';
+		frm.nowPage.value = p_num;
+		frm.submit();
+	}
+	
+	function state_chage(state, req_no){		
+		var frm = document.boardForm;							
+		
+		frm.req_no.value = req_no;
+		frm.request_state.value = state;
+		frm.action = "request_modify";						
+		frm.submit();
+	}
+</script>
+<div style="margin: 20px;">
+	<form id="boardForm" name="boardForm" method="post" action="" onsubmit="return false;" autocomplete="off">
+		<input type="hidden" name="nowPage" value="<%=nowPage%>"/>
+		<input type="hidden" id="req_no" name="req_no" value="" />
+		<input type="hidden" id="filename" name="filename" value="" />
+		<input type="hidden" id="board_no" name="board_no" value="<%=board_no%>" />
+		<input type="hidden" id="request_state" name="request_state" value="" />
+		<div class="board_search">
+			<h3 class="float_l">행사신청관리 ( 행사명 :<span style="color: olive;"> <%=data[0].board_title %> )</span></h3>
+			<!--<p class="float_r">
+				<select name="search_type">
+					<option value="board_title" <%if(search_type=="board_title"){%> selected="selected" <%}%>>제목</option>
+					<option value="board_content" <%if(search_type=="board_content"){%> selected="selected" <%}%>>내용</option>
+				</select>
+				<input type="text" name="search_text" id="search_text" value="<%=search_text%>" style="ime-mode:active;"/>
+				<input type="button" id="brd_search" value="검색"  class="btn_small_black"  />
+			</p>-->
+		</div>
+		<div class="board_list">
+			<table>
+				<colgroup>
+					<col width="7%" />
+					<col />
+					<col width="18%" />					
+					<col width="25%" />
+					<col width="15%" />
+				</colgroup>
+				<thead>
+					<tr>
+						<th>번호</th>
+						<th>이름</th>
+						<th>연락처</th>
+						<th>이메일</th>
+						<th>신청일</th>						
+						<th>신청상태</th>
+					</tr>
+				</thead>
+				<tbody>
+					<% 
+					for(var i = 0; i < data.length; i++){
+						var numCount = total_cnt - ((nowPage -1) * pageSize) -i;
+						
+						if(data[i].create_name == null) data[i].create_name = "--";
+					%>
+					<tr>
+					<!-- <td><%=data[i].board_no %></td> -->
+					<td><%=numCount%></td>
+					<td class="title hand" onclick="MM_openBrWindow('/admin/web/event_board_view','','width=550,height=450,scrollbars=1','<%=data[i].board_no %>','view')"><%=data[i].orgmem_name %></td>
+					<td><%=data[i].orgmem_phone1  %>-<%=data[i].orgmem_phone2  %>-<%=data[i].orgmem_phone3  %></td>
+					<td><%=data[i].orgmem_email  %></td>										
+					<td><%=data[i].c_date  %></td>
+					<!--<td><div style="text-align:left;padding-left:10px;"><a href="#" onclick="MM_openBrWindow('/admin/web/event_board_write','','width=850,height=870,scrollbars=1', '<%=data[i].board_no %>', 'modify')"><img src="../../../images/admin/icon_edit.gif" alt="수정" /></a>
+					<img class="brd_del hand" brd_no="<%=data[i].board_no %>" src="../../../images/admin/icon_delete.gif" alt="삭제" />					
+					</td>-->
+					<td><div style="text-align:left;padding-left:10px;">
+						<select name="r_state" id="r_state" style="width: 85px;height:30px;" onchange="state_chage(this.value, '<%=data[i].request_no%>');" >						
+							<option value="y" <%if(data[i].request_state=="y"){%>selected <%}%>>참석확정</option>
+							<option value="n" <%if(data[i].request_state=="n"){%>selected <%}%>>참석취소</option>
+						</select>
+					</div></td>
+					</tr>
+					<% } %>
+					<%if(data.length == 0){%>
+						<tr>
+							<td colspan="6">
+								등록된 목록이 없습니다.
+							</td>
+						</tr>
+					<%}%>
+				</tbody>
+			</table>
+		</div>
+	</form>
+	<div class="mt_20">
+		<div class="paging" id="page_navi">
+		</div>
+		<p class="float_r">
+			<button class="ui-button" id="btnExport" type="button">
+				<span class="ui-icon ui-icon-print"></span>엑셀
+			</button>
+		</p>
+	</div>
+</div>

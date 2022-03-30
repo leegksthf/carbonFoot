@@ -1,0 +1,138 @@
+<script>
+	$(document).ready(function(){
+		
+		var header_h = $(".header").outerHeight(true),
+			sub_h = $(".sub_head").outerHeight(true),
+			menu_h = $(".staff_menu").outerHeight(true),
+			padding_h = header_h + sub_h + menu_h
+			
+		$(".staff_con").css("padding-top", padding_h)
+		//.staff_con 반응형 패딩
+		
+		$(".staff_menu ul li a").click(function(){
+			$(".staff_menu ul li a").removeClass("intro_menu_on");
+			$(this).addClass("intro_menu_on");
+		})//서브메누 addclass
+		
+		$(".staff_menu ul li").click(function(){
+			var i = $(this).index();
+			$(".staff_con li").css("display", "none")
+			$(".staff_con li").eq(i).css("display", "block")
+		})//staff_con display
+		
+		
+	});//js end
+</script>
+<!-- 탭 -->
+<div class="intro_menu staff_menu">
+   <!--<ul>
+	 <li><a href="advisory?century=<%=century%>" class="intro_menu_on">지구총재</a></li>
+	 <li><a href="mark?century=<%=century%>">실천과제</a></li>
+	 <li ><a href="moral?century=<%=century%>">지구집행부</a></li>
+	 <li ><a href="introduce?century=<%=century%>">조직기구표</a></li>
+	 <li ><a href="global?century=<%=century%>">지구현황</a></li>
+	 <li ><a href="place?century=<%=century%>">사무국</a></li>
+   </ul>-->
+	<ul>
+		<li><a href="#" class="intro_menu_on">트레이너단</a></li>
+		<li><a href="#">운영자문위원</a></li>
+		<li><a href="#">정책자문위원</a></li>
+		<li><a href="#">총재지역대표</a></li>
+		<li><a href="#">감사, 사무총장, 재무</a></li>
+		<li><a href="#">연수위원</a></li>
+		<li><a href="#">신생클럽 어드바이져</a></li>
+		<li><a href="#">총재특별대표</a></li>
+		<li><a href="#">석거관기위원</a></li>
+		<li><a href="#">상임위원장</a></li>
+		<li><a href="#">사무부총장</a></li>
+		<li><a href="#">위원회 위원장 / 부위원장</a></li>
+		<li><a href="#">사무차장</a></li>
+	</ul>
+</div>
+<div id="container_intro">
+	<!-- 내용 -->
+	<ul class="staff_con">
+		<li class="staff_01" style="display: block;">
+			<h1 class="con_tit"><span>트레이너단</span></h1>
+			<div class="staff_img_wrap">
+				<img src="/images/staff_01.jpg" alt="트레이너단" />
+			</div>
+		</li>
+		<li class="staff_02">
+			<h1 class="con_tit"><span>운영자문위원</span></h1>
+			<div class="staff_img_wrap">
+				<img src="/images/staff_02.jpg" alt="운영자문위원" />
+			</div>
+		</li>
+		<li class="staff_03">
+			<h1 class="con_tit"><span>정책자문위원</span></h1>
+			<div class="staff_img_wrap">
+				<img src="/images/staff_03.jpg" alt="정책자문위원" />
+			</div>
+		</li>
+		<li class="staff_04">
+			<h1 class="con_tit"><span>총재지역대표</span></h1>
+			<div class="staff_img_wrap">
+				<img src="/images/staff_04.jpg" alt="총재지역대표" />
+			</div>
+		</li>
+		<li class="staff_05">
+			<h1 class="con_tit"><span>감사, 사무총장, 재무</span></h1>
+			<div class="staff_img_wrap">
+				<img src="/images/staff_05.jpg" alt="감사, 사무총장, 재무" />
+			</div>
+		</li>
+		<li class="staff_06">
+			<h1 class="con_tit"><span>연수위원</span></h1>
+			<div class="staff_img_wrap">
+				<img src="/images/staff_06.jpg" alt="연수위원" />
+			</div>
+		</li>
+		<li class="staff_07">
+			<h1 class="con_tit"><span>신생클럽 어드바이져</span></h1>
+			<div class="staff_img_wrap">
+				<img src="/images/staff_07.jpg" alt="신생클럽 어드바이져" />
+			</div>
+		</li>
+		<li class="staff_08">
+			<h1 class="con_tit"><span>총재특별대표</span></h1>
+			<div class="staff_img_wrap">
+				<img src="/images/staff_08.jpg" alt="총재특별대표" />
+			</div>
+		</li>
+		<li class="staff_09">
+			<h1 class="con_tit"><span>선거관리위원</span></h1>
+			<div class="staff_img_wrap">
+				<img src="/images/staff_09.jpg" alt="선거관리위원" />
+			</div>
+		</li>
+		<li class="staff_10">
+			<h1 class="con_tit"><span>상임위원장</span></h1>
+			<div class="staff_img_wrap">
+				<img src="/images/staff_10.jpg" alt="상임위원장" />
+			</div>
+		</li>
+		<li class="staff_11">
+			<h1 class="con_tit"><span>사무부총장</span></h1>
+			<div class="staff_img_wrap">
+				<img src="/images/staff_11.jpg" alt="사무부총장" />
+			</div>
+		</li>
+		<li class="staff_12">
+			<h1 class="con_tit"><span>위원회 위원장 / 부위원</span></h1>
+			<div class="staff_img_wrap">
+				<img src="/images/staff_12.jpg" alt="위원회 위원장 / 부위원" />
+			</div>
+		</li>
+		<li class="staff_13">
+			<h1 class="con_tit"><span>사무차장</span></h1>
+			<div class="staff_img_wrap">
+				<img src="/images/staff_13.jpg" alt="사무차장" />
+			</div>
+		</li>
+		
+		
+		
+	</ul>
+</div>
+

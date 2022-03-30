@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<title>차세대리더스포럼</title>
+<meta charset="utf-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=10, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="/css/default.css" />
+<link rel="stylesheet" type="text/css" href="/css/layout.css" />
+<link rel="stylesheet" type="text/css" href="/css/basic.css" />
+<link href="/js/jquery/css/jquery-ui-1.8.2.custom.css" rel="stylesheet"
+	type="text/css" />
+<script type="text/javascript" src="/js/jquery/jquery-1.7.1.min.js"></script>
+<script type="text/javascript"
+	src="/js/jquery/jquery-ui-1.8.16.custom.min.js"></script>
+<script type="text/javascript" src="/js/jquery/jquery.validate.js"></script>
+<script type="text/javascript" src="/js/jquery/jquery.blockUI.js"></script>
+<script type="text/javascript" src="/js/jquery/jquery.form.js"></script>
+
+<script src="/js/common.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		var src = getURLParam("imgSRC");
+		var chk = getURLParam("chk");
+		if(src!=null || src!="") {
+/*			
+			if(chk == "m"){
+				$("body").append("<img src='"+src+"' width='500' alt='' />");
+			}else{
+				$("body").append("<img src='"+src+"' alt='' />");
+			}
+*/
+			
+			imgTxt = '<div id="img_content" style="position:absolute; width:90%; left:50%; top:5%; margin-left:-45%; text-align:center;">';
+			imgTxt += '<img src="'+src+'" alt="" style="width:100%; height:100%;"/>';
+			imgTxt += '</div>';
+			
+			$("body").append(imgTxt);
+		}
+	});
+	
+	function getURLParam(strParamName) {
+		var strReturn = "";
+		var strHref = window.location.href;
+		var bFound=false;
+
+		var cmpstring = strParamName + "=";
+		var cmplen = cmpstring.length;
+
+		if ( strHref.indexOf("?") > -1 ){
+			var strQueryString = strHref.substr(strHref.indexOf("?")+1);
+			var aQueryString = strQueryString.split("&");
+			for ( var iParam = 0; iParam < aQueryString.length; iParam++ ){
+				if (aQueryString[iParam].substr(0,cmplen)==cmpstring){
+					var aParam = aQueryString[iParam].split("=");
+					strReturn = aParam[1];
+					bFound=true;
+					break;
+				}
+			}
+		}
+		
+		if (bFound==false) return null;
+		return strReturn;
+	}
+	</script>
+</head>
+
+<body>
+</body>
+</html>

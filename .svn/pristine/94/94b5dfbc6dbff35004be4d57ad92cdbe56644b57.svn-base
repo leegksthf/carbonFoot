@@ -1,0 +1,189 @@
+<script>
+	$(document).ready(function(){
+		
+		var header_h = $("#sub_header").outerHeight(true),
+			news_h = $(".quick_news").outerHeight(true),
+			quick_h = $(".sub_main_quick").outerHeight(true) + 10,
+			notice_h = $(".notice_zone_wrap").outerHeight(),
+			gallery_h = $(".gallery_zone_wrap").outerHeight(),
+			//zBox_h = notice_h + gallery_h,
+			all_h = $(window).outerHeight(),
+			sub_h = header_h + news_h + quick_h + notice_h + gallery_h
+			
+		$(".sub_slide_ad").css("height", all_h - sub_h - 50);
+		
+	});//js end
+</script>
+
+<div id="sub_header">
+	<a href="/index_detail"><img src="/images/rotary-logo-3662.svg" alt="로타리 로고" /></a>
+	<a href="/" class="home_btn">
+		<img src="/images/sub_main_home.svg" alt="로타리 3662지구 로고" />
+	</a>
+</div>
+<div class="quick_news swiper-container">
+	<div class="swiper-wrapper">
+		<p class="swiper-slide"><a href="#">2021-22년도 총재 "작은 나눔이 더 큰 봉사로" 안동 김하석 (제주표선 RC)</a></p>
+		<p class="swiper-slide"><a href="#">2021-22년도 총재 "작은 나눔이 더 큰 봉사로" 안동 김하석 (제주표선 RC)</a></p>
+		<p class="swiper-slide"><a href="#">2021-22년도 총재 "작은 나눔이 더 큰 봉사로" 안동 김하석 (제주표선 RC)</a></p>
+	</div>
+</div>
+<div class="main_quick sub_main_quick">
+		
+		<div class="main_q_search search_wrap_view">
+			<!--<select name="" id="">
+				<option value="회원검색">회원검색</option>
+				<option value="클럽검색">클럽검색</option>
+				<option value="회원사검색">회원사검색</option>
+			</select>-->
+			<div class="select_name">
+				<p>회원검색</p>
+			</div>
+			<div class="search_text_area">
+				<input type="text" placeholder="회원이름을 입력하세요." onfocus="this.placeholder=''" onblur="this.placeholder='회원이름을 입력하세요.'" />
+				<button>
+					<img src="/images/search_btn.svg" alt="검색버튼">
+				</button>
+			</div>
+		</div>
+		<ul class="main_quick_menu">
+			<li>
+				<a href="greeting">
+					<img src="/images/sub_q01.svg" alt="21-22총재" />
+					<p>21-22총재</p>
+				</a>
+			</li>
+			<li>
+				<a href="advisory">
+					<img src="/images/sub_q02.svg" alt="지구임원단" />
+					<p>지구임원단</p>
+				</a>
+			</li>
+			<li>
+				<a href="club_view">
+					<img src="/images/sub_q03.svg" alt="클럽찾기" />
+					<p>클럽찾기</p>
+				</a>
+			</li>
+			<li>
+				<a href="excutive">
+					<img src="/images/sub_q04.svg" alt="회원사찾기" />
+					<p>회원사찾기</p>
+				</a>
+			</li>
+			<li>
+				<a href="bizroom">
+					<img src="/images/sub_q05.svg" alt="BIZ홈" />
+					<p>BIZ홈</p>
+				</a>
+			</li>
+		</ul>
+	</div>
+		<div class="zone_wrap notice_zone_wrap">
+			<a href="/board_list" class="zone_tit">
+				<p>공지사항</p>
+				<i class="fas fa-chevron-right"></i>
+			</a>
+			<ul class="zone_con">
+				<% for(var i = 0; i < board_results.length; i++) {%>
+				<li brd_no="<%=board_results[i].board_no %>">
+					<a href="/board_view?brd_no=<%=board_results[i].board_no %>&category=notice&century=<%=century%>">
+						<span class="n_zone_l"><%=board_results[i].c_date %></span>
+						<span class="n_zone_r"><%=board_results[i].board_title %></span>
+					</a>
+				</li>
+				<% }%>	
+			</ul>
+	
+		</div>
+		
+		<div class="zone_wrap gallery_zone_wrap">
+			<a href="/gallery_board_list" class="zone_tit">
+				<p>갤 러 리</p>
+				<i class="fas fa-chevron-right"></i>
+			</a>
+
+			<div class="slide_gallery swiper-container">
+				<div class="swiper-wrapper">
+					<% for(var i = 0; i < gallery_results.length; i++) {%>
+					<a class="swiper-slide" href="/gallery_board_view?century=<%=century%>&brd_no=<%=gallery_results[i].board_no%>">
+						<div class="gallery_img">
+							<img src="/file/gallery_board/<%=gallery_results[i].img_file_name%>" alt="" />
+						</div>
+						<div class="gallery_tit">
+							<p><%=gallery_results[i].board_title %></p>
+							<p class="gallery_date"><%=gallery_results[i].c_date %></p>
+							<p><%=gallery_results[i].board_content %></p>
+						</div>
+					</a>
+					<% }%>	
+				</div>
+				<div class="swiper-button-next"></div>
+      			<div class="swiper-button-prev"></div>
+			</div>
+			
+		
+		</div>
+	
+	<div class="slide_ad sub_slide_ad swiper-container">
+		<div class="swiper-wrapper">
+			<% for(var i = 0; i < hongbo_results.length; i++) {%>
+			<a class="swiper-slide" href="/hongbo_board_view?century=<%=century%>&brd_no=<%=hongbo_results[i].board_no%>">
+				<img src="/file/hongbo_board/<%=hongbo_results[i].img_file_name%>" alt="" />
+			</a>
+			<% }%>	
+		</div>
+	</div>
+	
+	<script>
+	
+
+		var swiper01 = new Swiper('.quick_news', {
+		         autoplay: {
+		         	delay: 3000,
+		          	disableOnInteraction: false,
+		         },
+				speed : 1000,
+				direction: "vertical",
+				slidesPerView: 1,
+				loop:true,
+				loopAdditionalSlides: 1,
+				allowTouchMove: false
+			 });
+		
+		var swiper02 = new Swiper('.slide_gallery', {
+		         autoplay: {
+		         	delay: 3000,
+		          	disableOnInteraction: false,
+		         },
+				navigation: {
+		          nextEl: ".swiper-button-next",
+		          prevEl: ".swiper-button-prev",
+		        },
+				speed : 1000,
+				slidesPerView: 'auto',
+				centeredSlides: true,
+				slidesPerView: 'auto',
+				loop:true,
+				loopAdditionalSlides: 1,
+				loopFillGroupWithBlank: true,
+				spaceBetween: 15,
+			 });
+		var swiper03 = new Swiper('.slide_ad', {
+				autoplay: {
+					delay: 3000,
+					disableOnInteraction: false,
+				},
+				speed : 1000,
+				slidesPerView: 'auto',
+				centeredSlides: true,
+				slidesPerView: 'auto',
+				loop:true,
+				loopAdditionalSlides: 1,
+				loopFillGroupWithBlank: true,
+				spaceBetween: 15,
+			 });
+	</script>
+	
+	
+	

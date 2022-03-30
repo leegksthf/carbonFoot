@@ -1,0 +1,136 @@
+<script src="/js/common.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		/*page_navi*/
+		var page_navi = tag_place("<%=page_navi%>");
+		$('#page_navi').html(page_navi);
+		/*page_navi*/
+		
+		$('#go_write').click(function() {
+			/* $.ajax({
+				type : "post",  
+			    url : "/event_member_check",    
+			    dataType : "text",    
+			    success : function(data){
+			    	if(data == "success"){
+			    		location.href = 'event_brd_write';
+			    	}else{
+			    		alert("등록된 사용자만 글작성이 가능합니다.");
+			    		return false;
+			    	} 
+			    }
+			});	 */
+			
+			location.href = 'event_brd_write?mode=write';
+		});
+		
+		$('.board_view').click(function() {
+			var form = document.boardForm;
+			form.action = 'event_board_view';
+			
+			$('input[name="brd_no"]').val($(this).attr('brd_no'));
+			form.submit();
+		});
+		
+	});
+	
+	
+	function goPage(p_num){
+		var frm = document.boardForm;
+		frm.action = 'event_board_list';
+		frm.nowPage.value = p_num;
+		frm.submit();
+	}
+	function getWeekday(sDate) {
+
+		var yy = parseInt(sDate.substr(0, 4), 10);
+		var mm = parseInt(sDate.substr(5, 2), 10);
+		var dd = parseInt(sDate.substr(8), 10);
+
+		var d = new Date(yy,mm - 1, dd);
+		var weekday=new Array(7);
+		weekday[0]="일";
+		weekday[1]="월";
+		weekday[2]="화";
+		weekday[3]="수";
+		weekday[4]="목";
+		weekday[5]="금";
+		weekday[6]="토";
+
+		return weekday[d.getDay()];
+	}
+	$(document).ready(function(){
+		var header_h = $(".header").outerHeight(true),
+			sub_h = $(".sub_head").outerHeight(true),
+			menu_h = $(".exu_menu").outerHeight(true),
+			padding_h = header_h + sub_h + menu_h;
+				
+			$("#container").css("padding-top", padding_h)
+		})
+	
+</script>
+
+<div id="container">
+	<div class="board_list">
+		<form name="boardForm" method="post" onsubmit="return false;" autocomplete="off">
+			<input type="hidden" name="nowPage" value="<%=nowPage%>"/>
+			<input type="hidden" id="phone" name="phone" value=""/>
+			<input type="hidden" id="brd_no" name="brd_no" value=""/>
+			<div class="member_menu exu_menu">
+				<ul>
+					<li><a href="/board_list">공지사항</a></li>
+					<li><a href="/gallery_board_list">갤러리</a></li>
+					<li><a href="/event_board_list" class="active">행사참석</a></li>
+				</ul>
+	
+			</div>
+		<ul class="board_event_ul">
+			<% for(var i = 0; i < data.length; i++) {%>
+			<li  class="board_view" brd_no="<%=data[i].board_no %>" brd_cnt="<%=data[i].board_cnt %>">
+				<ol>
+					<li class="event_list_img"  brd_no="<%=data[i].board_no %>" brd_cnt="<%=data[i].board_cnt %>" style="height: 168px; padding: 0;">
+						<% if(data[i].file_dtname != "" && data[i].file_dtname != "null" && data[i].file_dtname != null) { %>
+							<img src="../../../file/event_board/<%=data[i].file_dtname %>" alt="" />
+						<% }else{ %>
+							<img src="/images/footer05_on.png" alt="" style="width: auto; object-fit: none; position: absolute; left: 50%; transform: translateX(-50%);"/>	
+						<% }%>	
+					</li>
+					<li class="board_view board_event_li" brd_no="<%=data[i].board_no %>" brd_cnt="<%=data[i].board_cnt %>" style="border: 0; padding: 0;">
+						<a href="#">
+							<dl>
+								<dt class="event_list_tit">
+								<% if(data[i].c_date == data[i].now) { %>
+									<img src="images/icon_new.gif" alt="" />
+								<% } %>
+									<%=data[i].board_title %>
+								</dt>
+								<dd class="event_list_date"><span>접수 : </span><span><%=data[i].board_startdate_nm %> <%=data[i].bs_week_name %> ~ <%=data[i].board_enddate_nm %> <%=data[i].be_week_name %></span></dd>
+								<dd class="event_list_date"><span>장소 : </span><span><%=data[i].board_address %> <%=data[i].board_address_detail %></span></dd>
+								<dd class="event_list_date"><span>날짜 : </span><span><%=data[i].board_eventsdate_nm %> <%=data[i].es_week_name %> <%=data[i].board_eventstime %> ~ <%=data[i].board_eventedate_nm %> <%=data[i].ee_week_name %> <%=data[i].board_eventetime %></span></dd>
+							</dl>
+							<!--<span><%=data[i].comment_cnt %></span>-->
+						</a>
+					</li>
+				</ol>
+			</li>
+			
+			<% } %>
+			<% if(data.length == 0) {%>
+			<li style="padding:25px;text-align:center;">
+				등록된 게시물이 없습니다.
+			</li>
+			<% }%>
+		</ul>
+		</form>
+	</div>
+	<div class="admin_paging" id="page_navi" align="center">
+	</div>
+	<% if(connectorDivision == "admin") 	{%>
+		<p class="float_r" align="right">
+			<input type="button" value="등록" class="btn_mint btn_round" id="go_write" />
+		</p>
+	<% } %>
+	
+</div>
+<!-- //컨텐츠 -->

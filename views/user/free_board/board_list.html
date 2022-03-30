@@ -1,0 +1,83 @@
+<script src="/js/common.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		/*page_navi*/
+		var page_navi = tag_place("<%=page_navi%>");
+		$('#page_navi').html(page_navi);
+		/*page_navi*/
+		
+		$('#go_write').click(function() {
+			$.ajax({
+				type : "post",  
+			    url : "/free_member_check",    
+			    dataType : "text",    
+			    success : function(data){
+			    	if(data == "success"){
+			    		location.href = 'free_brd_write';
+			    	}else{
+			    		alert("등록된 사용자만 글작성이 가능합니다.");
+			    		return false;
+			    	} 
+			    }
+			});	
+		});
+		
+		$('.board_view').click(function() {
+			var form = document.boardForm;
+			form.action = 'free_board_view';
+			
+			$('input[name="brd_no"]').val($(this).attr('brd_no'));
+			form.submit();
+		});
+		
+	});
+	
+	
+	function goPage(p_num){
+		var frm = document.boardForm;
+		frm.action = 'free_board_list';
+		frm.nowPage.value = p_num;
+		frm.submit();
+	}
+	
+</script>
+
+<div id="container">
+	<div class="board_list">
+		<form name="boardForm" method="post" onsubmit="return false;" autocomplete="off">
+			<input type="hidden" name="nowPage" value="<%=nowPage%>"/>
+			<input type="hidden" id="phone" name="phone" value=""/>
+			<input type="hidden" id="brd_no" name="brd_no" value=""/>
+		<ul>
+			<% for(var i = 0; i < data.length; i++) {%>
+			<li class="board_view" brd_no="<%=data[i].board_no %>" brd_cnt="<%=data[i].board_cnt %>" ><a href="#">
+				<dl>
+					<dt>
+					<% if(data[i].c_date == data[i].now) { %>
+						<img src="images/icon_new.gif" alt="" />
+					<% } %>
+						<%=data[i].board_title %>
+					</dt>
+					<dd><%=data[i].create_name %></dd>
+					<dd><%=data[i].c_date %></dd>
+				</dl>
+				<span><%=data[i].comment_cnt %></span>
+				</a>
+			</li>
+			<% } %>
+			<% if(data.length == 0) {%>
+			<li style="padding-top:50px;text-align:center;">
+				등록된 게시물이 없습니다.
+			</li>
+			<% }%>
+		</ul>
+		</form>
+	</div>
+	<div class="admin_paging" id="page_navi" align="center">
+	</div>
+	<p class="float_r" align="right">
+		<input type="button" value="등록" class="btn_blue btn_round" id="go_write" />
+	</p>
+</div>
+<!-- //컨텐츠 -->

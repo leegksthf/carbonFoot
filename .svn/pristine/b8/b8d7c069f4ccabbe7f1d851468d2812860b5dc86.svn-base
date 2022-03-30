@@ -1,0 +1,277 @@
+<script type="text/javascript">
+	 $(document).ready(function() {
+		 comment_ajax();
+		 
+		$("#go_list").click(function() {
+			$("#boardForm").submit();
+		});
+		$("#go_modify").click(function() {
+			var form = document.boardForm;
+			form.action = 'free_brd_write?mode=modify';
+			form.submit();
+		});
+		$("#go_delete").click(function() {
+			if(confirm("삭제하시겠습니까?")){
+				var form = document.boardForm;
+				form.action = 'free_brd_del';
+				form.submit();
+			}
+		});
+		
+		$(".board_tab").click(function(e){
+			e.preventDefault();
+			
+			var comment_type = $(this).attr("comment_type");
+			
+			$(".board_tab").removeClass("on");
+			$(this).addClass("on");
+			
+			if(comment_type == "view"){
+				$(".comment_write").hide();
+				$(".comment_view").show();
+			}else if(comment_type == "write"){
+				$(".comment_view").hide();
+				$(".comment_write").show();
+			}
+		});
+		
+		$("#comment_save").click(function(){
+			var comment_content = $.trim($("#comment_content").val());
+			var board_no = $("#board_no").val();
+			
+			if(comment_content == ""){
+				alert("댓글을 입력해주세요.");
+				$("#comment_content").focus();
+				return false;
+			}else if(confirm("댓글을 등록하시겠습니까?")){
+				
+				$.ajax({
+					type : "post",  
+				    url : "/free_comment_save",    
+				    dataType : "text",
+				    data : {"board_no" : board_no, "comment_content" : comment_content, "mode" : "write"},      
+				    success : function(data){
+				    	if(data == "success"){
+				    		alert("댓글이 등록되었습니다.");
+				    		comment_ajax(board_no);
+				    	}else{
+				    		alert("댓글등록에 실패하였습니다.");
+				    		return false;
+				    	} 
+				    }
+				});			
+			}
+		});
+		
+		$(".comment_del").live('click', function(){
+			var comment_no = $(this).attr("comment_no");
+			
+			if(confirm("삭제하시겠습니까?")){
+				$.ajax({
+					type : "post",  
+				    url : "/free_comment_save",    
+				    dataType : "text",
+				    data : {"comment_no" : comment_no, "mode" : "delete"},      
+				    success : function(data){
+				    	if(data == "success"){
+				    		alert("댓글이 삭제되었습니다.");
+				    		comment_ajax(board_no);
+				    	}else{
+				    		alert("댓글삭제에 실패하였습니다.");
+				    		return false;
+				    	} 
+				    }
+				});	
+			}
+		});
+		
+		$(".comment_modify").live('click', function(){
+			var thisDl = $(this).parents("dl:first");
+			thisDl.find(".ori_data").hide();
+			thisDl.find(".modify_data").show();
+		});
+		
+		$(".comment_modify_cancel").live('click', function(){
+			var thisDl = $(this).parents("dl:first");
+			thisDl.find(".modify_data").hide();
+			thisDl.find(".ori_data").show();
+		});
+		
+		$(".comment_modify_bt").live('click', function(){
+			var thisDl = $(this).parents("dl:first");
+			
+			var comment_no = $(this).attr("comment_no");
+			var comment_content = $.trim(thisDl.find(".comment_modify_content").val());
+			var board_no = $("#board_no").val();			
+			
+			if(comment_content == ""){
+				alert("댓글을 입력해주세요.");
+				$("#comment_content").focus();
+				return false;
+			}else if(confirm("댓글을 수정하시겠습니까?")){
+				
+				$.ajax({
+					type : "post",  
+				    url : "/free_comment_save",    
+				    dataType : "text",
+				    data : {"board_no" : board_no, "comment_content" : comment_content, "mode" : "modify", "comment_no" : comment_no},      
+				    success : function(data){
+				    	if(data == "success"){
+				    		alert("댓글이 수정되었습니다.");
+				    		comment_ajax(board_no);
+				    	}else{
+				    		alert("댓글수정에 실패하였습니다.");
+				    		return false;
+				    	} 
+				    }
+				});			
+			}			
+		});
+		
+		var view_content = $(".view_content").html().replace(/@@@/g, "<br>");
+		$(".view_content").html(view_content);
+		
+		$(".fileList").live('click', function() {
+			var ext = $(this).attr("fileReview").split('.').pop().toLowerCase();
+			
+			if($.inArray(ext, ['gif','png','jpg','jpeg']) == -1) {
+				window.location.href = $(this).attr("fileInfo");
+			} else {
+				if(isMobile()) {
+					var url = "/views/user/free_board/img_view.html?imgSRC="+$(this).attr("fileReview");
+					window.location.href = url;
+				} else {
+					window.location.href = $(this).attr("fileInfo");
+				}
+			}
+		});
+		
+		$(".contImg").click(function() {
+			if( $(this).get(0).tagName=="IMG" ) {
+				//var url = "/views/user/free_board/img_view.html?imgSRC="+$(this).attr("src");
+				//window.location.href = url;
+			}
+		});
+	});
+	 
+	function comment_ajax(){
+		 
+		var board_no = $("#board_no").val();
+		var comment_html = "";
+		 
+		$.ajax({
+			type : "post",  
+		    url : "/free_comment_list",    
+		    dataType : "json",
+		    data : {"board_no" : board_no},      
+		    success : function(data){
+		    	var connectorNo = data.connectorNo;
+		    	 
+		    	if($(data.result).length > 0){
+		    		var comment_insertUser = "";
+		    		
+		    		$(data.result).each(function(key, data){
+		    			if(data.orgmem_no == "5555555") {
+		    				comment_insertUser = "PC(공용)"
+		    			} else {
+		    				comment_insertUser = data.orgmem_name;
+		    			}
+		    			comment_html += "<dl>";
+		    			comment_html += "	<dt><p>"+comment_insertUser+" <span>"+data.c_date+"</span></p> ";
+		    			if(connectorNo == data.orgmem_no){ //자신이 쓴 댓글만 삭제가능
+		    			 	comment_html += "		<span class='comment_del ori_data' comment_no="+data.comment_no+">[삭제]</span>";
+		    			 	comment_html += "		<span class='comment_modify ori_data' comment_no="+data.comment_no+">[수정]</span>";
+		    			}
+		    			comment_html += "	</dt>";
+		    			comment_html += "	<dd class='ori_data'>"+data.comment_content+"</dd>";
+		    			comment_html += "	<dd class='modify_data noline nopadding nomargin' style='display:none;'>";
+	    			 	comment_html += "		<textarea class='comment_modify_content' style='width:95%; height:50px;'>"+data.comment_content+"</textarea>";
+	    			 	comment_html += "	</dd>";
+	    			 	comment_html += "	<dd class='modify_data align_c' style='display:none;'>";
+	    			 	comment_html += "		<button class='comment_modify_bt btn_blue btn_round' comment_no="+data.comment_no+">저장</button>";		    			
+	    			 	comment_html += "		<button class='comment_modify_cancel btn_gray btn_round'>취소</button>";
+		    			comment_html += "	</dd>";
+		    			comment_html += "</dl>";
+		    		});	 
+		    	}else{
+		    		comment_html = "<p class='mt_50 align_c'>등록된 댓글이 없습니다.</p>";
+		    	}
+		    	 
+		    	$(".comment_view").html(comment_html);
+		    	 
+		    	$(".board_tab:first").click();
+				 
+				$("#comment_content").val("");
+		    }
+		});		 
+	 }
+</script>
+<div id="container">
+	<form name="boardForm" id="boardForm" method="post" action="free_board_list" autocomplete="off">
+		<input type="hidden" name="nowPage" value="<%=nowPage%>"/>
+		<input type="hidden" name="board_no" id="board_no" value="<%=db_data[0].board_no %>"/>
+	</form>
+	<div class="board_view">
+		<h3><%=db_data[0].board_title %></h3>
+		<p>작성자: <%=db_data[0].create_name %> / 조회수 : <%=db_data[0].board_cnt %> / 작성일 : <%=db_data[0].c_date %></p>
+
+		<div class="view_content">
+			<%=db_data[0].board_content.replace(/\r\n/g, "@@@") %>
+			
+			<%
+			if(db_data_file.length){
+				for(var i = 0; i < db_data_file.length; i++){
+					var fileName = "";
+					var fileExt = "";
+					
+					fileName = db_data_file[i].file_dtname;		
+					fileExt = fileName.substring(fileName.lastIndexOf('.') +1, fileName.length).toLowerCase();
+					
+					if(fileExt == 'gif' || fileExt == 'png' || fileExt == 'jpg' || fileExt == 'jpeg'){
+			%>
+			
+				<div style="margin-top:10px;"><img src="/file/board/<%=db_data_file[i].file_dtname%>" alt="" class="contImg hand"/></div>
+				
+			<%
+					}
+				}
+			}
+			%>
+		</div>
+		
+		<!-- 
+		<%
+		if(db_data_file.length){
+			for(var i = 0; i < db_data_file.length; i++){
+		%>
+			<p><a href="#" class="fileList hand" fileInfo="/download/<%=db_data_file[i].file_dtname%>/<%=db_data_file[i].file_name%>/board" fileReview="/file/board/<%=db_data_file[i].file_dtname%>"><%=db_data_file[i].file_name%></a></p>
+		<%
+			}
+		}
+		%>	 
+		-->	
+	</div>
+	<p class="align_r">
+		<%if( db_data[0].member_num==connectorNo || db_data[0].create_name==ad_id){%>
+			<button class="btn_blue btn_round" id="go_modify">수정</button>
+			<button class="btn_gray btn_round" id="go_delete">삭제</button>
+		<%}%>
+		<button class="btn_blue btn_round" id="go_list">목록으로</button>
+	</p>
+	
+	<div class="comment_tab">
+		<ul>
+			<li style="width:50%;" class="on board_tab" comment_type="view"><a href="#">댓글</a></li>
+			<li class="board_tab" comment_type="write"><a href="#">댓글쓰기</a></li>
+		</ul>
+	</div>
+	<div class="comment_write" style="display:none;">
+		<textarea rows="4" cols="79" style="width:100%; height:50px; ime-mode:active;" id="comment_content"></textarea>
+		<p class="align_r">
+			<button class="btn_gray btn_round" id="comment_save">댓글등록</button>
+		</p>
+	</div>
+	<div class="comment_view">
+	</div>
+</div>	
+<!-- //컨텐츠 -->

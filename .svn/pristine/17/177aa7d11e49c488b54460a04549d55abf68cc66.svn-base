@@ -1,0 +1,398 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=10, user-scalable=yes,target-densitydpi=medium-dpi" />
+<script type="text/javascript">
+	 $(document).ready(function() {
+		 comment_ajax();
+		 
+		$("#go_list").click(function() {
+			$("#boardForm").submit();
+		});
+		
+		$("#go_modify").click(function() {
+			var form = document.boardForm;
+			form.action = 'hongbo_board_write?century=<%=century%>&mode=modify';
+			form.submit();
+		});
+		$("#go_delete").click(function() {
+			if(confirm("삭제하시겠습니까?")){
+				var form = document.boardForm;
+				form.action = 'hongbo_board_del';
+				form.submit();
+			}
+		});
+
+		$(".board_tab").click(function(e){
+			e.preventDefault();
+			
+			var comment_type = $(this).attr("comment_type");
+			
+			$(".board_tab").removeClass("on");
+			$(this).addClass("on");
+			
+			if(comment_type == "view"){
+				$(".comment_write").hide();
+				$(".comment_view").show();
+			}else if(comment_type == "write"){
+				$(".comment_view").hide();
+				$(".comment_write").show();
+			}
+		});
+		
+		$("#comment_save").click(function(){
+			var comment_content = $.trim($("#comment_content").val());
+			var board_no = $("#board_no").val();
+			
+			if(comment_content == ""){
+				alert("댓글을 입력해주세요.");
+				$("#comment_content").focus();
+				return false;
+			}else if(confirm("댓글을 등록하시겠습니까?")){
+				
+				$.ajax({
+					type : "post",  
+				    url : "/hongbo_comment_save",    
+				    dataType : "text",
+				    data : {"board_no" : board_no, "comment_content" : comment_content, "mode" : "write"},      
+				    success : function(data){
+				    	if(data == "success"){
+				    		alert("댓글이 등록되었습니다.");
+				    		comment_ajax(board_no);
+				    	}else{
+				    		alert("댓글등록에 실패하였습니다.");
+				    		return false;
+				    	} 
+				    }
+				});			
+			}
+		});
+		
+		$(".comment_del").live('click', function(){
+			var comment_no = $(this).attr("comment_no");
+			
+			if(confirm("삭제하시겠습니까?")){
+				$.ajax({
+					type : "post",  
+				    url : "/hongbo_comment_save",    
+				    dataType : "text",
+				    data : {"comment_no" : comment_no, "mode" : "delete"},      
+				    success : function(data){
+				    	if(data == "success"){
+				    		alert("댓글이 삭제되었습니다.");
+				    		comment_ajax(board_no);
+				    	}else{
+				    		alert("댓글삭제에 실패하였습니다.");
+				    		return false;
+				    	} 
+				    }
+				});	
+			}
+		});		
+		
+		$(".comment_modify").live('click', function(){
+			var thisDl = $(this).parents("dl:first");
+			thisDl.find(".ori_data").hide();
+			thisDl.find(".modify_data").show();
+		});
+		
+		$(".comment_modify_cancel").live('click', function(){
+			var thisDl = $(this).parents("dl:first");
+			thisDl.find(".modify_data").hide();
+			thisDl.find(".ori_data").show();
+		});
+		
+		$(".comment_modify_bt").live('click', function(){
+			var thisDl = $(this).parents("dl:first");
+			
+			var comment_no = $(this).attr("comment_no");
+			var comment_content = $.trim(thisDl.find(".comment_modify_content").val());
+			var board_no = $("#board_no").val();			
+			
+			if(comment_content == ""){
+				alert("댓글을 입력해주세요.");
+				$("#comment_content").focus();
+				return false;
+			}else if(confirm("댓글을 수정하시겠습니까?")){
+				
+				$.ajax({
+					type : "post",  
+				    url : "/hongbo_comment_save",    
+				    dataType : "text",
+				    data : {"board_no" : board_no, "comment_content" : comment_content, "mode" : "modify", "comment_no" : comment_no},      
+				    success : function(data){
+				    	if(data == "success"){
+				    		alert("댓글이 수정되었습니다.");
+				    		comment_ajax(board_no);
+				    	}else{
+				    		alert("댓글수정에 실패하였습니다.");
+				    		return false;
+				    	} 
+				    }
+				});			
+			}			
+		});
+		
+		var view_content = $(".view_content").html().replace(/@@@/g, "<br>");
+		$(".view_content").html(view_content);
+		
+		$(".contImg").click(function() {
+			if( $(this).get(0).tagName=="IMG" ) {
+				//var url = "/views/user/hongbo_board/img_view.html?imgSRC="+$(this).attr("src");
+				//window.location.href = url;
+				//window.open('/views/user/hongbo_board/img_view.html?imgSRC='+$(this).attr("src")+'', 'hongboView_Pop', 'width=500, height=500');
+			}
+		});
+	});
+	 
+	function comment_ajax(){
+		 
+		var board_no = $("#board_no").val();
+		var comment_html = "";
+		 
+		$.ajax({
+			type : "post",  
+		    url : "/hongbo_comment_list",    
+		    dataType : "json",
+		    data : {"board_no" : board_no},      
+		    success : function(data){
+		    	var connectorNo = data.connectorNo;
+					    	
+		    	if($(data.result).length > 0){
+		    		var comment_insertUser = "";
+		    		
+		    		$(data.result).each(function(key, data){
+		    			if(data.orgmem_no == "5555555") {
+						   comment_insertUser = "PC(공용)"
+					   } else {
+						   comment_insertUser = data.orgmem_name;
+					   }
+					   comment_html += "<dl>";
+					   comment_html += "	<dt><p>"+comment_insertUser+" <span>"+data.c_date+"</span></p> ";
+					   if(connectorNo == data.orgmem_no){ //자신이 쓴 댓글만 삭제가능
+							comment_html += "		<span class='comment_del ori_data' comment_no="+data.comment_no+"><i class='fa fa-trash'></i></span>";
+							comment_html += "		<span class='comment_modify ori_data' comment_no="+data.comment_no+"><i class='fa fa-pen'></i></span>";
+					   }
+					   comment_html += "	</dt>";
+					   comment_html += "	<dd class='ori_data'>"+data.comment_content+"</dd>";
+					   comment_html += "	<dd class='modify_data noline nopadding nomargin' style='display:none;'>";
+						comment_html += "		<textarea class='comment_modify_content' style='width:95%; height:50px;'>"+data.comment_content+"</textarea>";
+						comment_html += "	</dd>";
+						comment_html += "	<dd class='modify_data align_c' style='display:none;'>";
+						comment_html += "		<button class='comment_modify_bt btn_blue btn_round' comment_no="+data.comment_no+">저장</button>";		    			
+						comment_html += "		<button class='comment_modify_cancel btn_gray btn_round'>취소</button>";
+					   comment_html += "	</dd>";
+					   comment_html += "</dl>";
+		    		});	 
+		    	}else{
+		    		comment_html = "<p class='align_c'>등록된 댓글이 없습니다.</p>";
+		    	}
+		    	 
+		    	$(".comment_view").html(comment_html);
+		    	 
+				$(".board_tab:first").click();
+				 
+				$("#comment_content").val("");
+		    }
+		});		 
+	 } 
+</script>
+<style>
+</style>
+<div id="container">
+	<form name="boardForm" id="boardForm" method="post" action="hongbo_board_list" autocomplete="off">
+		<input type="hidden" name="nowPage" value="<%=nowPage%>"/>
+		<input type="hidden" name="board_no" id="board_no" value="<%=db_data[0].board_no %>"/>
+	</form>
+	<div class="board_view">
+		<div>
+			<h3><%=db_data[0].board_title %></h3>
+			<p class="board_date">조회수 : <%=db_data[0].board_cnt %> / 작성일 : <%=db_data[0].c_date %></p>
+		</div>
+		<% if(db_data_mem.length > 0){%>
+			<div class="member_list" style="margin: 0;">
+				<li class="mbr_view">
+					<% 	if(db_data_mem[0].orgmem_img != '' && db_data_mem[0].orgmem_img != null && db_data_mem[0].orgmem_img != 'null'){%>
+						<a href="javascript:;" class="fileList hand" filereview="/file/member/<%=db_data_mem[0].orgmem_img%>">
+							<img src="../../../file/member/<%=db_data_mem[0].orgmem_img%>" width="95" height="128" alt=""></a>
+					<%}%>
+					<ul>	
+						<li class="title">
+							<% 	if(db_data_mem[0].orgmem_name != '' && db_data_mem[0].orgmem_name != null && db_data_mem[0].orgmem_name != 'null'){%>	
+							<span style="display:inline;font-size:16px; line-height: 1.8; font-weight:500; color:#236da0"><%=db_data_mem[0].orgmem_name%> </span>
+							<%}%>
+							<% 	if(db_data_mem[0].orgmem_name_han != '' && db_data_mem[0].orgmem_name_han != null && db_data_mem[0].orgmem_name_han != 'null'){%>	
+							<span style="display:inline;font-size:14px; line-height: 1.8;"><%=db_data_mem[0].orgmem_name_han%> </span>
+							<%}%>
+							<% 	if(db_data_mem[0].orgmem_name_en != '' && db_data_mem[0].orgmem_name_en != null && db_data_mem[0].orgmem_name_en != 'null'){%>	
+							<span style="display:inline;font-size:13px; line-height: 1.8;" "=""><%=db_data_mem[0].orgmem_name_en%> </span>
+							<%}%>
+						<% if (db_data_mem[0].device_os == 'android') { %>		
+							<img src="/images/admin/android.png" alt="안드로이드"/>
+						<% }else if(db_data_mem[0].device_os == 'iOS'){ %>
+							<img src="/images/admin/ios.png" alt="iOS" />
+						<% }else{ %>
+							<img src="/images/admin/app_empty.png" alt="" />
+						<% } %>
+						</li>
+
+
+						<li>
+							<% 	if(db_data_mem[0].area_club != '' && db_data_mem[0].area_club != null && db_data_mem[0].area_club != 'null'){%>	
+							<span style="color: #000; font-weight:500;padding-top:3px;padding-bottom:0px; font-size: 15px; letter-spacing: -1px; color:#236da0"><%=db_data_mem[0].area_club%>&nbsp;&nbsp;<%=db_data_mem[0].orgmem_area%></span>
+							<%}%>
+						</li>
+						<% if(db_data_mem[0].company_YN == 'Y'){%>
+						<li>
+							<% 	if(db_data_mem[0].orgmem_company_name != '' && db_data_mem[0].orgmem_company_name != null && db_data_mem[0].orgmem_company_name != 'null'){%>	
+							<span style="color: #000; font-weight:500;padding-top:0px;padding-bottom:2px; font-size: 13px; display: contents;"><%=db_data_mem[0].orgmem_company_name%></span>
+							<%}%>
+						</li>
+						<%}%>
+					</ul>
+				</li>
+				</div>
+				<div class="member_detail_info_box">
+					<% 	if(db_data_mem[0].orgmem_reg_no != '' && db_data_mem[0].orgmem_reg_no != null && db_data_mem[0].orgmem_reg_no != 'null'){%>	
+					<div class="member_detail_info">
+						<div class="member_detail_info_left">국제협회번호</div>
+						<div class="member_detail_info_right">
+							<div class="phone_btn"><%=db_data_mem[0].orgmem_reg_no%></div>
+						</div>
+					</div>
+					<%}%>
+					<% 	if(db_data_mem[0].orgmem_birth_month != '' && db_data_mem[0].orgmem_birth_month != null && db_data_mem[0].orgmem_birth_month != 'null'){%>	
+					<div class="member_detail_info">
+						<div class="member_detail_info_left">입&nbsp;&nbsp;&nbsp;&nbsp;회&nbsp;&nbsp;&nbsp;&nbsp;일</div>
+						<div class="member_detail_info_right">
+							<div class="phone_btn"><%=db_data_mem[0].orgmem_birth_month%></div>
+						</div>
+					</div>
+					<%}%>
+					<% 	if(db_data_mem[0].post_num != '' && db_data_mem[0].post_num != null && db_data_mem[0].post_num != 'null'){%>	
+						<div class="member_detail_info">
+							<div class="member_detail_info_left">역&nbsp;&nbsp;&nbsp;&nbsp;임&nbsp;&nbsp;&nbsp;&nbsp;수</div>
+							<div class="member_detail_info_right">
+								<div class="phone_btn"><%=db_data_mem[0].post_num%></div>
+							</div>
+						</div>
+					<%}%>
+					<% 	if(db_data_mem[0].adr_YN == 'Y'){%>
+						<% 	if(db_data_mem[0].orgmem_address != '' && db_data_mem[0].orgmem_address != null && db_data_mem[0].orgmem_address != 'null'){%>	
+						<div class="member_detail_info">
+							<div class="member_detail_info_left">주&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;소</div>
+							<div class="member_detail_info_right">
+								<% 	if(db_data_mem[0].zip_code != '' && db_data_mem[0].zip_code != null && db_data_mem[0].zip_code != 'null'){%>	
+								<div class="phone_btn">(<%=db_data_mem[0].zip_code%>)<%=db_data_mem[0].orgmem_address%> </div>
+								<%} else {%>
+								<div class="phone_btn"><%=db_data_mem[0].orgmem_address%> </div>
+								<%}%>
+							</div>
+						</div>
+						<%}%>
+					<%}%>
+					<% 	if(db_data_mem[0].tel_YN == 'Y'){%>
+						<% 	if(db_data_mem[0].orgmem_tel1 != '' && db_data_mem[0].orgmem_tel1 != null && db_data_mem[0].orgmem_tel1 != 'null'){%>	
+						<div class="member_detail_info">
+							<div class="member_detail_info_left">전&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;화</div>
+							<div class=" member_detail_info_right">
+								<div class="phone_btn"><a href="tel:<%=db_data_mem[0].orgmem_tel1%>-<%=db_data_mem[0].orgmem_tel2%>-<%=db_data_mem[0].orgmem_tel3%>"><%=db_data_mem[0].orgmem_tel1%>-<%=db_data_mem[0].orgmem_tel2%>-<%=db_data_mem[0].orgmem_tel3%></a></div>
+								<div class="call_btn"><a href="tel:<%=db_data_mem[0].orgmem_tel1%>-<%=db_data_mem[0].orgmem_tel2%>-<%=db_data_mem[0].orgmem_tel3%>"><img src="../../../../images/icon_call.png" alt="전화걸기"></a>
+								</div>
+								<div class="msg_btn"></div>
+							</div>
+						</div>
+						<%}%>
+					<%}%>
+					<% 	if(db_data_mem[0].fax_YN == 'Y'){%>
+						<% 	if(db_data_mem[0].orgmem_fax1 != '' && db_data_mem[0].orgmem_fax1 != null && db_data_mem[0].orgmem_fax1 != 'null'){%>	
+						<div class="member_detail_info">
+							<div class="member_detail_info_left">팩&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;스</div>
+							<div class="member_detail_info_right">
+								<div class="phone_btn"><a href="fax:<%=db_data_mem[0].orgmem_fax1%>-<%=db_data_mem[0].orgmem_fax2%>-<%=db_data_mem[0].orgmem_fax3%>"><%=db_data_mem[0].orgmem_fax1%>-<%=db_data_mem[0].orgmem_fax2%>-<%=db_data_mem[0].orgmem_fax3%></a></div>
+							</div>
+						</div>
+						<%}%>
+					<%}%>
+
+					<% 	if(db_data_mem[0].phone_YN == 'Y'){%>
+						<% 	if(db_data_mem[0].orgmem_phone1 != '' && db_data_mem[0].orgmem_phone1 != null && db_data_mem[0].orgmem_phone1 != 'null'){%>		
+						<div class="member_detail_info">
+							<div class="member_detail_info_left">휴&nbsp;&nbsp;대&nbsp;&nbsp;번&nbsp;&nbsp;호</div>
+							<div class="member_detail_info_right">
+								<div class="phone_btn"><a href="tel:<%=db_data_mem[0].orgmem_phone1%>-<%=db_data_mem[0].orgmem_phone2%>-<%=db_data_mem[0].orgmem_phone3%>"><%=db_data_mem[0].orgmem_phone1%>-****-<%=db_data_mem[0].orgmem_phone3%></a></div>
+								<div class="call_btn"><a href="tel:<%=db_data_mem[0].orgmem_phone1%>-<%=db_data_mem[0].orgmem_phone2%>-<%=db_data_mem[0].orgmem_phone3%>"><img src="../../../../images/icon_call.png"
+											alt="전화걸기"></a></div>
+								<div class="msg_btn"><a href="sms:<%=db_data_mem[0].orgmem_phone1%>-<%=db_data_mem[0].orgmem_phone2%>-<%=db_data_mem[0].orgmem_phone3%>"><img src="../../../../images/icon_message.png"
+											alt="문자메세지"></a></div>
+							</div>
+						</div>
+						<%}%>
+					<%}%>
+					<% 	if(db_data_mem[0].e_mail_YN == 'Y'){%>
+						<% 	if(db_data_mem[0].orgmem_email != '' && db_data_mem[0].orgmem_email != null && db_data_mem[0].orgmem_email != 'null'){%>		
+						<div class="member_detail_info">
+							<div class="member_detail_info_left">이&nbsp&nbsp&nbsp&nbsp메&nbsp&nbsp&nbsp&nbsp일</div>
+							<div class="member_detail_info_right">
+								<div class="phone_btn"><a href="mailto:<%=db_data_mem[0].orgmem_email%>"><%=db_data_mem[0].orgmem_email%></a></div>
+							</div>
+						</div>
+						<%}%>
+					<%}%>
+					<% 	if(db_data_mem[0].link1 != '' && db_data_mem[0].link1 != null && db_data_mem[0].link1 != 'null'){%>	
+						<div class="member_detail_info">
+							<div class="member_detail_info_left">역&nbsp;&nbsp;대&nbsp;&nbsp;직&nbsp;&nbsp;책</div>
+							<div class="member_detail_info_right">
+								<div class="phone_btn"><a><%=db_data_mem[0].link1%></a></div>
+							</div>
+						</div>
+					<%}%>
+				</div>
+				
+
+				<%}%>	
+
+		<div class="view_content">						
+			<%
+				if(db_data_main_file.length){
+					for(var i = 0; i < db_data_main_file.length; i++){
+			%>
+				<div style="margin-top:10px;"><img src="/file/hongbo_board/<%=db_data_main_file[i].file_dtname%>" alt="" class="contImg hand"/></div>
+			<%
+					}
+				}
+				if(db_data_file.length){
+					for(var i = 0; i < db_data_file.length; i++){
+			%>
+					<div style="margin-top:10px;"><img src="/file/hongbo_board/<%=db_data_file[i].file_dtname%>" alt="" class="contImg hand"/></div>
+			<%
+					}
+				}
+			%>
+		
+			<%=db_data[0].board_content.replace(/\r\n/g, "@@@") %><br />
+		</div>
+	</div>
+	<p class="align_r">
+		<%if( db_data[0].orgmem_no==connectorNo || connectorDivision == "admin"){%>
+		
+		
+			<button class="btn_small_black btn_mint btn_round" id="go_modify">수정</button>
+			<button class="btn_gray btn_round" id="go_delete">삭제</button>
+			<%}%>
+		<button class="btn_gray btn_default" id="go_list">목록으로</button>
+	</p>
+	
+	<div class="comment_tab">
+		<ul>
+			<li style="width:50%;" class="on board_tab" comment_type="view"><a href="#">댓글</a></li>
+			<li class="board_tab" comment_type="write"><a href="#">댓글쓰기</a></li>
+		</ul>
+	</div>
+	<div class="comment_write" style="display:none;">
+		<textarea rows="4" cols="79" style="width:100%; height:50px; ime-mode:active;" id="comment_content"></textarea>
+		<p class="align_r">
+			<button class="btn_darkblue btn_default" id="comment_save">댓글등록</button>
+		</p>
+	</div>
+	<div class="comment_view">
+	</div>	
+</div>
+<!-- //컨텐츠 -->

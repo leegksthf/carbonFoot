@@ -1,0 +1,201 @@
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script src="https://kit.fontawesome.com/af2a9fd141.js" crossorigin="anonymous"></script>
+
+
+<body>
+	<div class="miniEarth-wrap">
+		<div class="myInfo-wrap">
+			<div class="myInfo">
+				<div class="profile-img">
+					<img src="/images/carbonFoot/profile_yuna.png" alt="프로필사진">
+				</div>
+				<div class="myGrade">
+					<p>나의 오렌지 나무는<br /><span>열매나무</span>입니다.</p>
+					<img src="/images/carbonFoot/orange_tree5.png" alt="">
+				</div>
+			</div>
+			<div class="calc-menu">
+				<ul class="circle-wrap">
+					<li>
+						<button class="tablinks proofShot" onclick="pay(event, 'proofShot')">
+							<p>191</p>
+						</button>
+						<span>인증샷</span>
+					</li>
+					<li>
+						<button class="tablinks" onclick="pay(event, 'point')">
+							<p>417</p>
+						</button>
+						<span>포인트</span>
+					</li>
+					<li>
+						<button class="tablinks" onclick="pay(event, 'activityReport')">
+							<img src="/images/carbonFoot/icon_list02.png" alt="활동보고서아이콘">
+						</button>
+						<span>활동보고서</span>
+					</li>
+					<li>
+						<button class="tablinks" onclick="pay(event, 'activityAnalyze')">
+							<img src="/images/carbonFoot/icon_graphe.png" alt="활동분석아이콘">
+						</button>
+						<span>활동분석</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div id="proofShot" class="tabcontent">
+			<div class="proofShot-wrap">
+				<div class="swiper mySwiper">
+					<div class="pagination"></div>
+					<div class="swiper-wrapper">
+						<div class="swiper-slide">
+							<img src="/images/carbonFoot/code.png" alt="">
+						</div>
+						<div class="swiper-slide">
+							<img src="/images/carbonFoot/code.png" alt="">
+						</div>
+						<div class="swiper-slide">
+							<img src="/images/carbonFoot/code.png" alt="">
+						</div>
+						<div class="swiper-slide">
+							<img src="/images/carbonFoot/code.png" alt="">
+						</div>
+						<div class="swiper-slide">
+							<img src="/images/carbonFoot/code.png" alt="">
+						</div>
+						<div class="swiper-slide">
+							<img src="/images/carbonFoot/code.png" alt="">
+						</div>
+						<div class="swiper-slide">
+							<img src="/images/carbonFoot/code.png" alt="">
+						</div>
+						<div class="swiper-slide">
+							<img src="/images/carbonFoot/code.png" alt="">
+						</div>
+						<div class="swiper-slide">
+							<img src="/images/carbonFoot/code.png" alt="">
+						</div>
+					</div>
+				</div>
+				<div class="proofShot-icons">
+					<div class="icon-wrap">
+						<div class="icon-wrap1">
+							<div class="heart">
+								<i class="fa-regular fa-heart"></i>
+							</div>
+							<span>좋아요 <span>22</span>개</span>
+						</div>
+						<div class="icon-wrap2">
+								<i class="fa-solid fa-share-from-square"></i>
+							<span>공유</span>
+						</div>
+						<div class="icon-wrap3">
+							<i class="fa-regular fa-clone"></i>
+							<span>복사</span>
+						</div>
+					</div>
+					<div class="all-comment">
+						<a href="miniEarthComment">댓글 모두 보기</a>
+					</div>
+				</div>
+				<div class="proofShot-comment">
+					<div class="proofShot-txt">
+						<input type="text" placeholder="댓글 쓰기" onfocus="this.placeholder=''"
+							onblur="this.placeholder='댓글 쓰기'" />
+						<button>
+							<i class="fas fa-location-arrow"></i>
+						</button>
+					</div>
+					<div class="comment-list">
+						<div class="comment-line">
+							<p class="writer">홍길동</p>
+							<p class="comment">모두 함께 동참하여 탄소발자국 줄여 지구사랑 실천해요~</p>
+						</div>
+						<div class="comment-line">
+							<p class="writer">홍길동</p>
+							<p class="comment">모두 함께 동참하여 탄소발자국 줄여 지구사랑 실천해요~</p>
+						</div>
+						<div class="comment-line">
+							<p class="writer">홍길동</p>
+							<p class="comment">모두 함께 동참하여 탄소발자국 줄여 지구사랑 실천해요~</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="point" class="tabcontent">
+			<div class="point-wrap">
+				2222asd6f846we4
+			</div>
+		</div>
+		<div id="activityReport" class="tabcontent">
+			<div class="activityReport-wrap">
+				33333efasdf
+			</div>
+		</div>
+		<div id="activityAnalyze" class="tabcontent">
+			<div class="activityAnalyze-wrap">
+				444444efasdf
+			</div>
+		</div>
+	</div>
+
+
+	<script>
+		const heart = document.getElementsByClassName('heart')[0];
+		heart.addEventListener('click', function() {
+			if(heart.classList.toggle('fill')) {
+			heart.innerHTML = `<i class="fa-solid fa-heart"></i>`
+			} else {
+				heart.innerHTML = `<i class="fa-regular fa-heart"></i>`
+			}
+		})
+
+		function pay(evt, menu) {
+			var i, tabcontent, tablinks;
+			tabcontent = document.getElementsByClassName("tabcontent");
+			for (i = 0; i < tabcontent.length; i++) {
+				tabcontent[i].style.display = "none";
+			}
+			document.getElementById(menu).style.display = "block";
+		}
+
+
+		var tablinks = document.getElementsByClassName('tablinks');
+
+		for (var i = 0; i < tablinks.length; i++) {
+			tablinks[0].style.color = "white";
+			tablinks[0].style.background = "#00b050";
+			tablinks[0].style.border = "1px solid white";
+
+			tablinks[i].addEventListener('click', function () {
+				for (var j = 0; j < tablinks.length; j++) {
+					tablinks[j].style.color = "black";
+					tablinks[j].style.background = "white";
+					tablinks[j].style.border = "none";
+				}
+				this.style.color = "white";
+				this.style.background = "#00b050";
+				this.style.border = "1px solid white";
+			})
+		}
+
+		var swiper = new Swiper(".mySwiper", {
+			pagination: { // 페이저 버튼 사용자 설정
+				el: '.pagination', // 페이저 버튼을 담을 태그 설정
+				clickable: false, // 버튼 클릭 여부
+				type: 'fraction', // 버튼 모양 결정 "bullets", "fraction" 
+				renderBullet: function (index, className) { // className이 기본값이 들어가게 필수 설정
+					return '<a href="#" class="' + className + '">' + (index + 1) + '</a>'
+				},
+				renderFraction: function (currentClass, totalClass) { // type이 fraction일 때 사용
+					return '<span class="' + currentClass + '"></span>' +
+						'<span class="' + totalClass + '"></span>';
+				}
+			},
+		});
+
+		
+	</script>
+</body>

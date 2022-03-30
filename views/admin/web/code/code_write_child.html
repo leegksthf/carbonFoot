@@ -1,0 +1,122 @@
+<link href="/js/jquery/css/jquery-ui-1.8.2.custom.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="/js/jquery/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/js/jquery/jquery-ui-1.8.16.custom.min.js"></script>
+<script type="text/javascript" src="/js/jquery/jquery.validate.js"></script>
+<script src="/js/common.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#codeSave').click(function(){
+		var save_mode = $(this).attr('saveMode');
+		var group_id = $('input[name="code_group"]').val();
+		var id = $('input[name="code"]').val();
+		var name = $('input[name="code_name"]').val();
+		if(id==''){
+			alert('코드를 입력하세요');
+			$('input[name="code"]').focus();
+			return false;
+		}else if(name==''){
+			alert('코드명를 입력하세요');
+			$('input[name="code_name"]').focus();
+			return false;
+		}
+		$.ajax({
+			type : "post",  
+		    url : "/admin/web/code_chk",    
+		    dataType : "text",
+		    data : {code_group: group_id,code : id, code_name : name, mode : 'child'},      
+		    success : function(data){
+		    	if(data == 'success'){
+		    		var frm = document.codeForm;
+		    		frm.mode.value = 'child';
+		    		frm.save_mode.value = save_mode;
+		    		frm.action = 'code_save';
+		    		frm.submit();
+		    	}else{
+		    		alert('이미 사용중인 코드거나 사용할수없는 코드입니다.');
+		    		$('input[name="code"]').val();
+		    		$('input[name="code"]').focus();
+					return false;	
+		    	}
+		    },
+		    async:false
+		});
+	});
+	$('#codeModify').click(function(){
+		var save_mode = $(this).attr('saveMode');
+		var group_id = $('input[name="code_group"]').val();
+		var id = $('input[name="code"]').val();
+		var name = $('input[name="code_name"]').val();
+		if(id==''){
+			alert('코드를 입력하세요');
+			$('input[name="code"]').focus();
+			return false;
+		}else if(name==''){
+			alert('코드명를 입력하세요');
+			$('input[name="code_name"]').focus();
+			return false;
+		}
+   		var frm = document.codeForm;
+   		frm.mode.value = 'child';
+   		frm.save_mode.value = save_mode;
+   		frm.action = 'code_save';
+   		frm.submit();
+	});
+});  
+</script>
+<div class="content">
+	<h2><span class="float_l">코드관리</span><img onclick="window.close();"src="/images/admin/btn_close.gif" alt="" class="float_r hand" /></h2>
+	
+	<form action="code_list" id="codeForm" name="codeForm" method="post" onsubmit="return false;" autocomplete="off">
+		<input type="hidden" name="mode" value=""/>
+		<input type="hidden" name="save_mode" value=""/>
+		<input type="hidden" name="code_group" value="<%=code_group%>"/>
+		<table>
+			<tr>
+				<th>
+					코드
+				</th>
+				<td>
+				<%if(mode=='write'){%>
+					<input type="text" name="code" value="" maxlength="20" style="ime-mode:inactive;"/>
+				<%}else if(mode=='modify'){%>
+					<%=data[0].code%>
+					<input type="hidden" name="code" value="<%=data[0].code%>" maxlength="20" style="ime-mode:inactive;"/>
+				<%}%>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					코드명
+				</th>
+				<td>
+					<%if(mode=='write'){%>
+						<input type="text" name="code_name" value="" style="ime-mode:active;"/>
+					<%}else if(mode=='modify'){%>
+						<input type="text" name="code_name" value="<%=data[0].code_name%>" style="ime-mode:active;"/>
+					<%}%>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					순번
+				</th>
+				<td>
+					<%if(mode=='write'){%>
+						<input type="text" name="code_order" value="" maxlength="20"  onkeyup="CheckOnlyNumber(this);"/>
+					<%}else if(mode=='modify'){%>
+						<input type="text" name="code_order" value="<%=data[0].code_order%>" maxlength="20"  onkeyup="CheckOnlyNumber(this);"/>
+					<%}%>
+				</td>
+			</tr>
+		</table>
+		<p class="btn">
+			<%if(mode=='write'){%>
+				<button type="button"  class="btn_big_blue hand" saveMode="write" id="codeSave">등록</button>
+			<%}else if(mode=='modify'){%>
+				<button type="button"  class="btn_big_blue hand" saveMode="modify" id="codeModify">수정</button>
+			<%}%>
+			<button type="button" class="btn_big_black hand" onclick="window.close();">취소</button>
+		</p>
+	</form>
+</div>

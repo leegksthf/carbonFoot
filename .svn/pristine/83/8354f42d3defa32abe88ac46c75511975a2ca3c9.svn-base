@@ -1,0 +1,33 @@
+<!-- 탭 -->
+<div class="intro_menu">
+	<ul>
+     <li style="width: 19%;"><a href="greeting?century=<%=century%>" >윤리강령</a></li>
+     <li style="width: 10%;"><a href="roles?century=<%=century%>" >목적</a></li>
+	 <li style="width: 10%; letter-spacing: 1px;"><a href="history?century=<%=century%>" class="intro_menu_on">LCI</a></li>
+	 <li style="width: 22%;"><a href="orgchart?century=<%=century%>">국제협회장</a></li>
+	 <li style="width: 24%;"><a href="ceo_history?century=<%=century%>">한국라이온스</a></li>
+	</ul>
+</div>
+<div id="container_intro">
+	<!-- 내용 -->
+	<div class="intro_greeting">
+	 <div class="history_wrap">
+		<h1 class="con_tit">국제라이온스협회(LCI)</h1>
+		<p class="sub_t1"><span style="font-size: 1.1rem;">創始者</span> 멜빈 존스  </p>
+		<p><img src="images/lci.png" class="lci_img" id="lci_img" width="43%" height="100%"></p>
+		<p style="font-size: 0.89rem; margin: 0px 0px 20px;"> <span style="    font-size: 1.5rem; font-weight: 800; margin: 15px 0 7px;
+    display: block; color: #0850A3;">MELVIN JONES</span>
+		FOUNDER LIONS CLUBS INTERNATIONAL <br>1879 ~ 1961</p>
+        <p class="sub_t1">라이온스 슬로건</p>
+        <p style="font-size: 1.9rem; color: #0850A3; font-weight: bold;">LIONS</p>
+        <p style="background-color: #F1C53B; display: inline-block; border-radius: 15px; padding: 5px 15px;
+    font-size: 0.91rem; margin: 10px 0 15px;"><strong>L</strong>iberty <strong>I</strong>ntelligence <strong>O</strong>ur <strong>N</strong>ation's 
+    <strong>S</strong>afety</p> <span></span>
+        <p style="margin-bottom: 25px;">자유와 지성 우리 국가의 안전</p>
+        <p class="sub_t1">라이온스 모토</p>
+        <p style="font-size: 1.4rem; margin-bottom: 1rem;">우리는 奉仕한다</p> 
+        <p style="font-size: 1.5rem; font-weight: bold; color: #1B4D92; font-style: italic;font-family: S-CoreDream-6Bold !important;">We Serve</p>
+      </div>
+	</div>
+</div>
+

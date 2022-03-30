@@ -1,0 +1,912 @@
+<!-- <div id="container" style="margin: 76px 0px 0px;" >
+		<p style="text-align: center;"><img src="../../../../images/mhead.png" alt="mhead" style="width: 100%;"></p>
+		<p style="text-align: center;"><img src="../../../../images/searchbox.png" alt="searchbox" style="width: 97%;"></p>
+		<p style="text-align: center;"><img src="../../../../images/members_02.png" alt="searchbox" style="width: 95%;"></p>
+		<p style="text-align: center;"><img src="../../../../images/mem03.png" alt="mem03" style="width: 95%;"></p>
+		<p style="text-align: center;"><img src="../../../../images/mem04.png" alt="mem04" style="width: 95%;"></p>
+</div> -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=10, user-scalable=yes" />
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css" />
+ <style type="text/css">
+ .wrap-loading { /*화면 전체를 어둡게 합니다.*/
+	 position: fixed;
+	 left: 0;
+	 right: 0;
+	 top: 0;
+	 bottom: 0;
+	 background: rgba(0, 0, 0, 0.2); /*not in ie */
+	 filter: progid:DXImageTransform.Microsoft.Gradient(startColorstr='#20000000',
+		 endColorstr='#20000000'); /* ie */
+ }
+ 
+ .wrap-loading div { /*로딩 이미지*/
+	 position: fixed;
+	 top: 50%;
+	 left: 50%;
+	 margin-left: -21px;
+	 margin-top: -21px;
+ }
+ 
+ .display-none { /*감추기*/
+	 display: none;
+ }
+ 
+ .ui-widget {
+	 font-family: 'Noto Sans KR', sans-serif;
+	 font-size: 14px;
+ }
+ 
+ .ui-menu-item-wrapper {
+	 font-family: 'Noto Sans KR', sans-serif;
+	 font-size: 14px;
+ }
+ 
+ .overflow {
+	 height: 400px;
+ }
+ 
+ .company_name {
+	 color: #fe9900 !important;
+ }
+ 
+ .blank_span {
+	 margin: 0 !important;
+	 padding: 0 !important;
+	 background: #fff;
+	 color: #fff !important;
+	 float: right;
+	 height: 25px;
+ }
+ </style>
+ 
+ <script type="text/javascript">
+	 var strlimit = 0;
+	 var endlimit = 0;
+ 
+	 $(document).ready(function() {
+		
+		
+		 var num = 0;
+		 var endNum = $("input[name='jsonlength']").val();
+		 
+		 
+		 ajax_data();
+
+		 if("<%=num_type%>" == 'all' || "<%=search_text%>" != ''){
+			$('.search_wrap4').hide();
+			$('.search_wrap3').show();		
+		 }else{
+			$('.search_wrap4').show();
+			$('.search_wrap3').hide();
+			$('#num_type').val("<%=num_type%>");	
+			selectboxChange0();
+		 }
+		 
+		 $('.mbr_view').live("click", function () {
+			 var mbr_no = $(this).attr("mbr_no"); 
+			 
+			 $('.member_detail_info_box').each(function(index, value){
+				 var mbr_no_detail = $(this).attr("mbr_no");
+				 
+				 if(mbr_no_detail==mbr_no){
+					 if ($(this).css("display") == "block") {
+						 $(this).hide();
+						 var opensrc = "/images/plus1.png";
+						 $("#plus_"+mbr_no).attr("src", opensrc);
+					 } else {
+						 $(this).show();
+						 var opensrc = "/images/plus2.png";
+						 $("#plus_"+mbr_no).attr("src", opensrc);
+					 }
+				 }
+			 });
+			 
+		 });
+ 
+ 
+		 $('#searchAction').click(function() {
+			 strlimit = 0;
+			 endlimit = 20;
+			 num = 0;
+			 var search_txt = $("input[name='search_text']").val();
+			 
+			 $("#mbr_limitAra").html("");
+			 
+			 ajax_data(strlimit, endlimit);
+		 });
+
+		 $('#searchAction2').click(function() {
+			 strlimit = 0;
+			 endlimit = 20;
+			 num = 0;
+			 var search_txt = $("input[name='search_text2']").val();
+			 
+			 $("#mbr_limitAra").html("");
+			 
+			 ajax_data(strlimit, endlimit);
+		 });
+ 
+		 
+		 
+ 
+ 
+		 $('#search_text').keypress(function(e) {
+			 if (e.which == 13) {
+				 $(this).blur();
+				 $('#searchAction').focus().click();
+			 }
+		 });
+
+		 $('#search_text2').keypress(function(e) {
+			 if (e.which == 13) {
+				 $(this).blur();
+				 $('#searchAction2').focus().click();
+			 }
+		 });
+ 
+		 $(window).scroll(function() {
+			 var search_txt = $("input[name='search_text']").val();
+ 
+			 endNum = $("input[name='jsonlength']").val();
+ 
+			 if(Math.ceil($(this).scrollTop()) % ($(document).height() - $(window).height()) <= 1){
+				 if(endNum > 20){
+					 if(num>=1 && strlimit == 0){
+						 num = 0;
+					 }
+					 console.log("outstrlimit"+ strlimit);
+					 console.log("outendlimit"+ endlimit);
+					 console.log("endNum"+ endNum);
+					 if (strlimit + endlimit < endNum) {
+						 num++;
+						 strlimit = num * 20;
+ 
+						 if (strlimit + endlimit > endNum) {
+							 endlimit = endNum - strlimit;
+							 ajax_data(strlimit, endlimit);
+						 } else if (endNum > endlimit) {
+							 endlimit = 20;
+							 ajax_data(strlimit, endlimit);
+						 }
+					 }
+				 }
+			 }
+		 });
+		 
+		 $(".chosung").click(function(){
+			 var chosung = $(this).attr("value");
+			 
+			 $("select[name=search_type] option[value=orgmem_company_name_cho]").attr("selected", "selected");
+			 $("#search_text").val(chosung);
+			 $('#searchAction').click();
+		 });
+		 
+		 $(".fileList").live('click', function() {
+			 $("#img_pop").html('');
+			 var ext = $(this).attr("fileReview").split('.').pop().toLowerCase();		
+			 
+			 if($.inArray(ext, ['gif','png','jpg','jpeg']) == -1) {
+			 } else {
+									 
+					 var imgSrc = $(this).attr("fileReview");
+					 var item = imgSrc.substring(imgSrc.lastIndexOf('/') +1, imgSrc.length).toLowerCase();
+					 item = item.replace("."+ ext, "");
+								 
+					 var strHtml = '<img src="'+ imgSrc +'" id="'+ item +'" border="0" />';
+					 $("#img_pop").html(strHtml);
+					 
+					 $("#img_pop img").load(function(){
+						 var maxW = 300;
+						 var maxH = 386;
+						 var w = $("#"+ item).width();
+						 var h = $("#"+ item).height();
+						 var resizeW = "";
+						 var resizeH = "";
+						 
+						 var basisRatio = maxH / maxW;
+						 var imgRatio = h / w;
+ 
+						 if(imgRatio > basisRatio){
+							 if(h > maxH){
+								 resizeH = maxH;
+								 resizeW = Math.round((w * resizeH)/h);
+							 }else{
+								 resizeW = w;
+								 resizeH = h;
+							 }
+						 }else if (imgRatio < basisRatio){
+							 if(w > maxW){
+								 resizeW = maxW;
+								 resizeH = Math.round((h * resizeW)/w);
+							 }else{
+								 resizeW = w;
+								 resizeH = h;
+							 }
+						 }else{
+							 resizeW = w;
+							 resizeH = h;
+						 }
+						 
+						 $("#"+ item).css({"width": resizeW+"px", "height":resizeH+"px"});
+ 
+					 });
+				 
+					 
+					  $.blockUI({ 
+						 message: $(".profileImg"),
+						 css: { 
+							 top: '20px',
+							 left : '50%',
+							 width: '80%',
+							 cursor : null,
+							 margin: '0 0 0 -40%',
+							 border: 'none', 
+							 backgroundColor: '#FFF', 
+							 '-webkit-border-radius': '10px', 
+							 '-moz-border-radius': '10px'
+						 },
+						 onOverlayClick: $.unblockUI
+					 });
+				var s = '<div class="dispatch_pop_close" style="border-top: solid 1px gray; height: 30px;"><p class="dispatch_pop_close hand" style=" margin-top: 5px; cursor: pointer;" onclick="imgclose()">닫기</p></div>';
+				$('.blockUI').append(s);
+			 }
+		 });		
+	 });
+
+ function imgclose(){
+	ynflag=0;
+	$.unblockUI();
+}
+
+	 var search_txt = $("input[name='search_text']").val();
+ 
+	 function ajax_data(strlimit, endlimit) {
+ 
+		 var search_txt = $("input[name='search_text']").val();
+		 var search_txt2 = $("input[name='search_text2']").val();
+		 var search_typ = $("select[name='search_type']").val();
+		 var branch_typ = $("select[name='branch_type']").val();
+		 var member_type = $("input[name='member_type']").val();
+		 var num_type = $("input[name='num_type']").val();
+		 var area_zone_type = $("#area_zone_type option:selected").val();
+		 var club_type = $("#club_type option:selected").val();
+		console.log(club_type);
+		 $.ajax({
+			 type : "POST",
+			 url : "/members_list_data",
+			 datatype : "json",
+			 data : {
+				 strlimit : strlimit,
+				 endlimit : endlimit,
+				 search_text : search_txt,
+				 branch_type : branch_typ,
+				 search_type : search_typ,
+				 member_type : member_type,
+				 num_type:num_type,
+				 area_zone_type:area_zone_type,
+				 club_type:club_type,
+				 search_txt2:search_txt2,
+				 num_type2 : "<%=num_type%>",
+				 club_type2:"<%=club_type%>",
+				 search_text2 : "<%=search_text%>",
+				 century : "<%=century%>"
+
+			 },
+			 success : function(json) {
+				 var ment = makeText(json.db_data);
+				 $("#mbr_limitAra").append(ment);
+				 $("#member_count").text("("+ json.db_data_length + '_' + json.db_data_length2 +")"+json.app_install_count);
+				  $("input[name='jsonlength']").val(json.db_data_length);
+				 // console.log(json.num_type);
+				 if(json.num_type == "1지역"){
+					 $(".num1").children().toggleClass("active");
+				 }else if(json.num_type == "2지역"){
+					 $(".num2").children().toggleClass("active");
+				 }else if(json.num_type == "3지역"){
+					 $(".num3").children().toggleClass("active");
+				 }else if(json.num_type == "4지역"){
+					 $(".num4").children().toggleClass("active");
+				 }else if(json.num_type == "5지역"){
+					 $(".num5").children().toggleClass("active");
+				 }else if(json.num_type == "6지역"){
+					 $(".num6").children().toggleClass("active");
+				 }else if(json.num_type == "7지역"){
+					 $(".num7").children().toggleClass("active");
+				 }else if(json.num_type == "8지역"){
+					 $(".num8").children().toggleClass("active");
+				 }else if(json.num_type == "9지역"){
+					 $(".num9").children().toggleClass("active");
+				 }else if(json.num_type == "10지역"){
+					 $(".num10").children().toggleClass("active");
+				 }else if(json.num_type == "11지역"){
+					 $(".num11").children().toggleClass("active");
+				 }else if(json.num_type == "12지역"){
+					 $(".num12").children().toggleClass("active");
+				 }else if(json.num_type == "m1"){
+					 $(".staff01").children().toggleClass("active");
+				 }else if(json.num_type == "m2"){
+					 $(".staff02").children().toggleClass("active");
+				 }else if(json.num_type == "all"){
+					 $(".all").children().toggleClass("active");
+					 /*$(".num1").children().removeClass("active");
+					 $(".num2").children().removeClass("active");
+					 $(".num3").children().removeClass("active");
+					 $(".num4").children().removeClass("active");
+					 $(".num5").children().removeClass("active");
+					 $(".num6").children().removeClass("active");
+					 $(".num7").children().removeClass("active");
+					 $(".num8").children().removeClass("active");*/
+				 }
+			 },
+			 beforeSend : function() {
+				 $('.wrap-loading').removeClass('display-none');
+			 },
+			 complete : function() {
+				 $('.wrap-loading').addClass('display-none');
+			 },
+			 error : function(xhr, status, error) {
+				 alert("등록된 회원이 없습니다.");
+			 }
+		 });
+	 }
+
+function selectboxChange(e){
+	var	s_area = $("#num_type").val();
+	$("#area_zone_type option:selected").val("");
+	var	s_zone = $("#area_zone_type option:selected").val();
+	//var codde = $("#code_club").val();
+	//console.log(codde);
+	$('#area_zone_type').empty();
+	$('#club_type').empty();
+	console.log(s_area);
+	$.ajax({
+		type : "POST",
+        url : "/admin/web/code_club",
+        dataType : "json",
+        data : {
+			s_area:s_area,
+			s_zone:s_zone
+       	}, success : function(data) {
+			console.log(data);
+			$('#area_zone_type').append("<option value=''>지대 선택</option>");
+			data.code_data.forEach(function(item){
+			var option = $("<option>" + item.code2+"</option>");
+			$('#area_zone_type').append(option);
+			 });
+			// data.db_data.forEach(function(item){
+			// var option2 = $("<option>" + item.club_name+"</option>");
+			// $('#club_type').append(option2);
+			//  });
+
+
+			// $('#area_club').css('display', 'block');
+			// $('#area_club').val(codde);		
+		   }
+	});
+}
+
+function selectboxChange0(){
+			var	s_area = "<%=num_type%>";
+			$('#club_type').empty();
+			$.ajax({
+				type : "POST",
+				url : "/admin/web/code_club",
+				dataType : "json",
+				data : {
+					s_area:s_area
+				}, success : function(data) {
+					console.log(data);
+
+					$('#club_type').append("<option value=''>선택하세요</option>"); 
+					data.db_data.forEach(function(item){
+					var option2 = $("<option>" + item.club_name+"</option>");
+					$('#club_type').append(option2);
+					
+				});	
+				$('#club_type').val("<%=club_type%>");
+				}
+			});
+
+				
+}
+
+function selectboxChange2(){
+	var	s_area = $("#num_type").val();
+	var	s_zone = $("#area_zone_type option:selected").val();
+	//var codde = $("#code_club").val();
+	//console.log(codde);
+	//$('#area_zone_type').empty();
+	$('#club_type').empty();
+	$.ajax({
+		type : "POST",
+        url : "/admin/web/code_club",
+        dataType : "json",
+        data : {
+			s_area:s_area,
+			s_zone:s_zone
+       	}, success : function(data) {
+			console.log(data);
+
+			$('#club_type').append("<option value=''>선택하세요</option>"); 
+			data.db_data.forEach(function(item){
+			var option2 = $("<option>" + item.club_name+"</option>");
+			$('#club_type').append(option2);
+			 });
+
+
+			// $('#area_club').css('display', 'block');
+			// $('#area_club').val(codde);		
+		   }
+	});
+
+		
+}
+
+
+
+
+
+function selectboxChange3(){
+			 strlimit = 0;
+			 endlimit = 20;
+			 num = 0;
+
+			 $("#mbr_limitAra").html("");
+			 
+			 ajax_data(strlimit, endlimit);
+}
+ 
+	 // HTML 생성함수
+	 function makeText(json) {
+		 var text = "";
+		 var orgmem_cate = $("#orgmem_cate").val();
+		 var search_txt = $("input[name='search_text']").val();
+ 
+		 for (var i = 0; i < json.length; i++) {
+			 text += '<li class="mbr_view"  mbr_no="' + json[i].orgmem_no + '"><div class="mem_pro_img">';
+			 var branch = ''+json[i].orgmem_branch_name;
+			 branch = branch.replace('지부','');			
+			 if (json[i].orgmem_img != '' && json[i].orgmem_img != 'null' && json[i].orgmem_img != null) {
+				 text += '<a href="javascript:;" class="fileList hand" fileReview="/file/member/' + json[i].orgmem_img + '"><img src="../../../file/member/' + json[i].orgmem_img + '" width="95" alt="" /></a>';
+			 } else {
+				 text += '<img src="../../../images/profile_photo.jpg" width="95" alt="" />';
+			 }
+ 
+			 text += '</div><ul>';
+			 /* text += '<li class="title">'; */
+			 /* <span style="font-weight:500;padding-top:5px;padding-bottom:2px;">['+json[i].orgmem_branch_name+']</span> */
+
+				 if(json[i].orgmem_committee_name2 != null && json[i].orgmem_committee_name2 != undefined ){
+					if(json[i].orgmem_committee2 == '580'){
+						text += '<li><span style="padding-right:3px; font-weight: 500; color: #7f7f7f; font-size: 16px;">['+json[i].orgmem_area+']</span></li>';	
+					}else{
+						text += '<li><span style="padding-right:3px; font-weight: 500; color: #7f7f7f; font-size: 16px;">['+json[i].orgmem_area+']</span></li>';
+					}
+					}else if(json[i].club_position_name != null && json[i].club_position_name != undefined ){
+						text += '<li><span style="padding-right:3px; font-weight: 500; color: #7f7f7f; font-size: 16px;">['+json[i].orgmem_area+']</span></li>';		
+					}else{
+						text += '<li><span style="padding-right:3px; font-weight: 500; color: #7f7f7f; font-size: 16px;">['+json[i].orgmem_area+']</span></li>';		
+					}	
+				 
+			 text += '<li class="title">';
+				 if((json[i].orgmem_name != 'null' && json[i].orgmem_name != undefined && json[i].orgmem_name != null)){
+			 text += '<span style="display:inline-block;font-size:16px; line-height: 1.8; font-weight:500; color:#232323">' + json[i].orgmem_name + ' </span>';
+			 text += '<a href="/bizroom" class="biz_go"><span>BIZ홈</span><img src="/images/main_menu07_on.svg" alt="비즈홈 아이콘" /></a>';	
+				 }
+				 /*if((json[i].orgmem_name_han != 'null' && json[i].orgmem_name_han != undefined && json[i].orgmem_name_han != '' && json[i].orgmem_name_han != null)){
+			 text += '<span style="display:inline;font-size:16px; line-height: 1.8;">' + '('+json[i].orgmem_name_han+')' + ' </span>';
+				 }
+				 if((json[i].orgmem_name_en != 'null' && json[i].orgmem_name_en != undefined && json[i].orgmem_name_en != null)){
+			 text += '<span style="display:inline;font-size:13px; line-height: 1.8;"">' + json[i].orgmem_name_en + ' </span>';
+				 }*/
+			 // if(json[i].orgmem_birth_year !="0000" && json[i].orgmem_birth_year != "") {
+			 // 	text += '[' + json[i].orgmem_birth_year +'.' + json[i].orgmem_birth_month +'.' + json[i].orgmem_birth_day +']';
+			 // }
+			 
+			 /*if (json[i].device_os == 'android') {
+			 	text += '<img src="/images/admin/android.png" alt="안드로이드" />';
+			 } else if (json[i].device_os == 'ios') {
+			 	text += '<img src="/images/admin/ios.png" alt="iOS" />';
+			 } else {
+			 	text += '<img src="/images/admin/app_empty.png" alt="" />';
+			 }*/
+			 text += '</li>';
+			 
+			 if((json[i].area_club != null && json[i].area_club != undefined && json[i].area_club != '' )){
+				 text += '<li><span style="color: #000; font-weight:500; font-size: 15px; color:#0f4c95"">' + json[i].area_club + '&nbsp;'+'(' +json[i].orgmem_area+')'+ "</span>";
+			 }
+			 text += '</li>';		
+			 
+			 
+			if(json[i].company_YN == 'Y'){
+			 if((json[i].orgmem_company_name != null && json[i].orgmem_company_name != undefined && json[i].orgmem_company_name != '' && json[i].orgmem_company_name != 'null')){
+				 text += '<li><span style="color: #000; font-weight: 500;padding-top:0px;padding-bottom:2px; font-size: 13px;">' + json[i].orgmem_company_name +"</span>";
+			}
+			text += '</li>';
+			}else{
+				
+			}
+			
+			 
+			 /*if(json[i].orgmem_company_name_minor != null && json[i].orgmem_company_name_minor != ''){
+				 text += '/' + json[i].orgmem_company_name_minor+"</span> <span style='font-weight:10;'>&nbsp/ "+json[i].organ_position +'</span>';
+			 }*/
+			 
+			 //text += '<li><span>직책 : '+ json[i].organ_position+ '</span></li>';
+			 
+			 
+			 text += '<img style="width: 15px;  height: 15px; position: absolute; right: 10px; bottom: 10px;" src="/images/plus1.png" id="plus_' + json[i].orgmem_no + '" alt="" /></li>';
+			 text += '</ul>';
+			 text += '</li>';
+			 text += '<div class="member_detail_info_box" style="display:none;" mbr_no="' + json[i].orgmem_no + '">';
+				 if(json[i].orgmem_reg_no != '' && json[i].orgmem_reg_no != null && json[i].orgmem_reg_no != 'null'){
+					 text += '<div class="member_detail_info">';
+					 text += '<div class="member_detail_info_left">국제협회번호</div>';
+					 text += '<div class="member_detail_info_right">';
+						 text += '<div class="phone_btn">'+json[i].orgmem_reg_no+'</div>';								
+					 text += '</div>';
+				 text += '</div>';
+				 }
+ 
+				 if(json[i].orgmem_birth_month != '' && json[i].orgmem_birth_month != null && json[i].orgmem_birth_month != 'null'){
+					 text += '<div class="member_detail_info">';
+					 text += '<div class="member_detail_info_left">입&nbsp&nbsp&nbsp&nbsp회&nbsp&nbsp&nbsp&nbsp일</div>';
+					 text += '<div class="member_detail_info_right">';
+						 text += '<div class="phone_btn">'+json[i].orgmem_birth_month+'</div>';								
+					 text += '</div>';
+				 text += '</div>';
+				 }
+				 if(json[i].adr_YN == 'Y'){
+				 if(json[i].orgmem_address != '' && json[i].orgmem_address != null && json[i].orgmem_address != 'null'){
+					 text += '<div class="member_detail_info">';
+					 text += '<div class="member_detail_info_left">주&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp소</div>';
+					 text += '<div class="member_detail_info_right">';
+						 text += '<div class="phone_btn">'+'('+json[i].zip_code +')'+json[i].orgmem_address+'</div>';								
+					 text += '</div>';
+				 text += '</div>';
+				 }
+				}else{
+
+				}
+ 
+				 if(json[i].tel_YN == 'Y'){
+					 if(json[i].orgmem_tel1 != null && json[i].orgmem_tel1 != 'null' && json[i].orgmem_tel1 != ''){
+						text += '<div class="member_detail_info">';
+						text += '<div class="member_detail_info_left">전&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp화</div>';
+						text += '<div class=" member_detail_info_right">';
+						 text += '<div class="phone_btn"><a href="tel:'+json[i].orgmem_tel1 + '-' + json[i].orgmem_tel2 + '-' + json[i].orgmem_tel3+'">';
+						 text += json[i].orgmem_tel1;
+						 text += '-'+json[i].orgmem_tel2+'-';
+						 text += json[i].orgmem_tel3;
+						 text += '</a></div>';
+						 text += '<div class="num_call_btn"><div class="call_btn"><a href="tel:'+json[i].orgmem_tel1 + '-' + json[i].orgmem_tel2 + '-' + json[i].orgmem_tel3+'"><img src="../../../../images/icon_call.png" alt="전화걸기"></a></div>';
+						 //text += '<div class="msg_btn"></div>';
+						 text += '</div> </div>';
+						 text += '</div>';
+						}
+				}else{
+
+				}
+				 if(json[i].fax_YN == 'Y'){
+						 if(json[i].orgmem_fax1 != null && json[i].orgmem_fax1 != 'null' && json[i].orgmem_fax1 != ''){
+							text += '<div class="member_detail_info">';
+							text += '<div class="member_detail_info_left">팩&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp스</div>';
+							text += '<div class="member_detail_info_right">';
+							 text += '<div class="phone_btn"><a href="fax:'+json[i].orgmem_fax1 + '-' + json[i].orgmem_fax2 + '-' + json[i].orgmem_fax3+'">';
+							 text += json[i].orgmem_fax1;
+							 text += '-';
+							 text += json[i].orgmem_fax2;
+							 text += '-';
+							 text += json[i].orgmem_fax3;
+							 text += '</a></div>';
+							 text += '</div>';				
+					 		 text += '</div>';
+						}
+
+				}else{
+
+				}	
+				 if(json[i].phone_YN == 'Y'){
+						 if(json[i].orgmem_phone1 != null && json[i].orgmem_phone1 != 'null' && json[i].orgmem_phone1 != ''){
+							text += '<div class="member_detail_info">';
+							text += '<div class="member_detail_info_left">휴&nbsp&nbsp대&nbsp&nbsp번&nbsp&nbsp호</div>';
+							text += '<div class="member_detail_info_right">';
+							 text += '<div class="phone_btn"><a href="tel:'+json[i].orgmem_phone1 + '-' + json[i].orgmem_phone2 + '-' + json[i].orgmem_phone3+'">';
+							 // text += '<span class="phone_txt">아이콘을 누르면 연결됩니다.</span>';
+							  text += json[i].orgmem_phone1;
+							  text += '-';
+							  text += '****';
+							  text += '-';
+							  text += json[i].orgmem_phone3;
+							 //text += json[i].orgmem_phone3;
+							 text += '</a></div>';
+							 text += '<div class="num_call_btn"><div class="call_btn"><a href="tel:'+json[i].orgmem_phone1 + '-' + json[i].orgmem_phone2 + '-' + json[i].orgmem_phone3+'" ><img src="../../../../images/icon_call.png" alt="전화걸기"></a></div>';
+							 text += '<div class="msg_btn"><a href="sms:'+json[i].orgmem_phone1 + '-' + json[i].orgmem_phone2 + '-' + json[i].orgmem_phone3+'" ><img src="../../../../images/icon_message.png" alt="문자메세지"></a></div>';
+							 text += '</div></div>';
+					 text += '</div>';
+					}
+
+				}else{
+					
+				}	
+				if(json[i].e_mail_YN == 'Y'){
+				 if (json[i].orgmem_email != '' && json[i].orgmem_email != null && json[i].orgmem_email != 'null') {
+					 text += '<div class="member_detail_info">';
+						 text += '<div class="member_detail_info_left">이메일</div>';
+						 text += '<div class="member_detail_info_right">';
+							 text += '<div class="phone_btn"><a href="mailto:'+json[i].orgmem_email + '">'+json[i].orgmem_email+'</a></div>';							
+						 text += '</div>';
+					 text += '</div>';
+				 }	
+				}else{
+
+				}
+				 
+				 if(json[i].link1 != '' && json[i].link1 != null && json[i].link1 != 'null'){
+					 text += '<div class="member_detail_info">';
+					 text += '<div class="member_detail_info_left">역&nbsp&nbsp대&nbsp&nbsp직&nbsp&nbsp책</div>';
+					 text += '<div class="member_detail_info_right">';
+						 text += '<div class="phone_btn"><a href="'+json[i].link1+'">'+json[i].link1+'</a></div>';								
+					 text += '</div>';
+				 text += '</div>';
+				 }
+ 
+				 /* if (json[i].company_img1 != ''&&json[i].company_img1 != null || json[i].company_img2 != '' && json[i].company_img2 !=null)  {
+					 text += '<div class="member_company_img_top">회사 사진</div>';
+				 } */
+				 if (json[i].business_card != '' && json[i].business_card != null){
+				 text += '<div class="business_card">';
+				 text += '<img src="../../../file/member/' + json[i].business_card + '"/>';
+				 text += '</div>'
+				 }
+				  if (json[i].company_img1 != ''&&json[i].company_img1 != null || json[i].company_img2 != '' && json[i].company_img2 !=null)  {
+					 console.log(json[i].company_img1);
+					 text += '<div class="member_company_img_bottom">';
+					 text += '<div class="company_img_1">';
+					 if (json[i].company_img1 != '' && json[i].company_img1 != null)
+						 text += '<img src="../../../file/member/' + json[i].company_img1 + '"/>';
+					 text += '</div>';
+					 text += '<div class="company_img_2">';
+					 if (json[i].company_img2 != '' && json[i].company_img2 != null)
+						 text += '<img src="../../../file/member/' + json[i].company_img2 + '"/>';
+					 text += '</div>';
+					 text += '</div>';
+				  }
+				  if (json[i].company_img3 != ''&&json[i].company_img3 != null || json[i].company_img4 != '' && json[i].company_img4 !=null) {
+					 text += '<div class="member_company_img_bottom">';
+					 text += '<div class="company_img_3">';
+					 if (json[i].company_img3 != '' && json[i].company_img3 != null)
+						 text += '<img src="../../../file/member/' + json[i].company_img3 + '"/>';
+					 text += '</div>';
+					 text += '<div class="company_img_4">';
+					 if (json[i].company_img4 != '' && json[i].company_img4 != null)
+						 text += '<img src="../../../file/member/' + json[i].company_img4 + '"/>';
+					 text += '</div>';
+					 text += '</div>';
+					 /* <img src="../../../images/footer01_on.png" /> */
+ 
+			 } 
+			 if (json[i].certificate1 != '' && json[i].certificate1 != null){
+				 text += '<div class="certificate1">';
+				 text += '<img src="../../../file/member/' + json[i].certificate1 + '"/>';
+				 text += '</div>'
+				 }
+			 if (json[i].certificate2 != '' && json[i].certificate2 != null){
+				 text += '<div class="certificate2">';
+				 text += '<img src="../../../file/member/' + json[i].certificate2 + '"/>';
+				 text += '</div>'
+				 }
+			 text += '</div>';
+		 }
+		 if (json.length == 0){
+			 text += '<p align="center">검색하신 회원 정보가 없습니다.</p>';
+		 }
+		 return text;
+	 }
+	 $(document).on('change','#search_type',function(){
+		 var value = $(this).val();
+		 if (value != 'all' && value != 'name' && value != 'company') {			
+			 $("#searchAction").click();
+		 }
+	 });
+	 $(document).on('change','#branch_type',function(){
+		 var value = $(this).val();
+		 if (value != 'all' && value != 'name' && value != 'company') {			
+			 $("#searchAction").click();
+		 }
+	 });
+	 
+		 
+	 // });
+	 $(document).on('click', ".member_item", function(){
+		var cat = this.dataset.cat;
+		$("#num_type").val(cat);
+		 switch(cat){
+			 case "1지역":
+			     $('.search_wrap4').show();
+				 $('.search_wrap3').hide();
+				 selectboxChange2();
+			 break;
+			 
+			 case "2지역":
+			 	 $('.search_wrap4').show();
+				 $('.search_wrap3').hide();
+				 selectboxChange2();
+			 break;
+ 
+			 case "3지역":
+			 	 $('.search_wrap4').show();
+				 $('.search_wrap3').hide();
+				 selectboxChange2();
+			 break;
+ 
+			 case "4지역":
+			 	 $('.search_wrap4').show();
+				 $('.search_wrap3').hide();
+				 selectboxChange2();
+			 break;
+ 
+			 case "5지역":
+			     $('.search_wrap4').show();
+				 $('.search_wrap3').hide();	
+				 selectboxChange2();
+			 break;
+ 
+			 case "6지역":
+			 	 $('.search_wrap4').show();
+				 $('.search_wrap3').hide();
+				 selectboxChange2();
+			 break;
+ 
+			 case "7지역":
+				  $('.search_wrap4').show();
+				  $('.search_wrap3').hide();
+				 selectboxChange2();
+			 break;
+ 
+			 case "8지역":
+			 	 $('.search_wrap4').show();
+				 $('.search_wrap3').hide();
+				 selectboxChange2();
+			 break;
+
+			 case "all":
+			     $('.search_wrap4').hide();
+				 $('.search_wrap3').show();
+			 break;
+		 }
+		 $("#mbr_limitAra").empty();
+		 ajax_data();
+	 });
+ 	$(document).ready(function(){
+		var header_h = $(".header").outerHeight(true),
+			sub_h = $(".sub_head").outerHeight(true),
+			menu_t = $(".intro_menu").outerHeight(true),
+			padding_h = header_h + sub_h + menu_t + 5;
+				
+			//$(".club_cont").css("top", padding_h)
+			$(".search_container").css("padding-top", padding_h)
+		
+	})
+ 
+ 
+ </script>
+ 
+ 
+ <!-- 컨텐츠 -->
+ <div id="consoleLog"></div>			
+				 
+ <div class="search_container">
+	 <!--<div class="member_menu3">
+	 	<ul style="border-bottom: 1px solid #eee;">
+		 	 <li class="all" style="width: 100%;"><a class="member_item" data-cat="all">전체</a></li>
+			 <li class="num3"><a class="member_item" data-cat="3지역">역대총재</a></li>
+			 <li class="num4"><a class="member_item" data-cat="4지역">지구임원</a></li>
+			 <li class="num1"><a class="member_item" data-cat="1지역">제1지역</a></li>
+			 <li class="num2"><a class="member_item" data-cat="2지역">제2지역</a></li>
+		 </ul>
+	 
+		 <ul style="border-bottom: 1px solid #eee;">
+			 <li class="num3"><a class="member_item" data-cat="3지역">제3지역</a></li>
+			 <li class="num4"><a class="member_item" data-cat="4지역">제4지역</a></li>
+			 <li class="num5"><a class="member_item" data-cat="5지역">제5지역</a></li>
+			 <li class="num6"><a class="member_item" data-cat="6지역">제6지역</a></li>
+			 <li class="num7"><a class="member_item" data-cat="7지역">제7지역</a></li>
+		 </ul>
+		 <ul style="border-bottom: 1px solid #eee;">
+			 <li class="num8"><a class="member_item" data-cat="8지역">제8지역</a></li>
+			 <li class="num7"><a class="member_item" data-cat="7지역">제9지역</a></li>
+			 <li class="num8"><a class="member_item" data-cat="8지역">제10지역</a></li>
+			 <li class="num7"><a class="member_item" data-cat="7지역">제11지역</a></li>
+			 <li class="num8"><a class="member_item" data-cat="8지역">제12지역</a></li>
+		 </ul>
+		 
+	 </div>-->
+ 	<div class="intro_menu member_menu3">
+		 <ul>
+		 	 <li class="all"><a class="member_item" data-cat="all">전체</a></li>
+			 <li class="staff01"><a class="member_item" data-cat="m1">역대총재</a></li>
+			 <li class="staff02"><a class="member_item" data-cat="m2">지구임원</a></li>
+			 <li class="num1"><a class="member_item" data-cat="1지역">제1지역</a></li>
+			 <li class="num2"><a class="member_item" data-cat="2지역">제2지역</a></li>
+		 </ul>
+		 <ul>
+			 <li class="num3"><a class="member_item" data-cat="3지역">제3지역</a></li>
+			 <li class="num4"><a class="member_item" data-cat="4지역">제4지역</a></li>
+			 <li class="num5"><a class="member_item" data-cat="5지역">제5지역</a></li>
+			 <li class="num6"><a class="member_item" data-cat="6지역">제6지역</a></li>
+			 <li class="num7"><a class="member_item" data-cat="7지역">제7지역</a></li>
+		 </ul>
+		 <ul> 
+			 <li class="num8"><a class="member_item" data-cat="8지역">제8지역</a></li>
+			 <li class="num9"><a class="member_item" data-cat="9지역">제9지역</a></li>
+			 <li class="num10"><a class="member_item" data-cat="10지역">제10지역</a></li>
+			 <li class="num11"><a class="member_item" data-cat="11지역">제11지역</a></li>
+			 <li class="num12"><a class="member_item" data-cat="12지역">제12지역</a></li>
+		 </ul>
+		 
+	 </div>
+	 <form action="" id="memberForm" name="memberForm" method="post"
+		 onsubmit="return false;" autocomplete="off">
+		 <input type="hidden" name="member_type" id="member_type" value="member" />
+		 <input type="hidden" name="auth" value="user" />
+		 <input type="hidden" name="orgmem_div" value="" />
+		 <input type="hidden" name="orgmem_no" value="" />
+		 <input type="hidden" name="menuNum" value="1" />
+		 <input type="hidden" name="jsonlength" value="" />
+		 <input type="hidden" name="endlimit" value="" />
+		 <input type="hidden" name="num_type"  id="num_type" value="" />
+		 
+		  <div class="search_wrap_view" style="margin: 1vh 0;"> 
+				<div class="select_name">
+					<p>회원검색</p>
+				</div>
+		        <div class="search_field">
+		            <input type="text" placeholder="회원이름을 입력하세요." onfocus="this.placeholder=''" onblur="this.placeholder='회원이름을 입력하세요.'" />
+					<button>
+						<img src="/images/search_btn.svg" alt="검색버튼">
+					</button>
+		        </div>
+	        </div>
+		 <!--<div class="search_wrap4" style="display: none;"> 
+				 <select name="club_type" id="club_type" onchange="selectboxChange3()">
+				 </select>
+ 
+			 <div class="search_field">
+				 <input type="text" name="search_text" id="" placeholder="&nbsp;검색어를 입력하세요">
+				 <button id="searchAction"><i class="fa fa-search fa-lg"></i></button>
+			 </div> 
+		  </div>--> 
+
+		<!--  <div class="search_wrap3"> 
+
+			 <div class="search_field">
+				<input type="text" name="search_text2" id="" placeholder="&nbsp;검색어를 입력하세요">
+				<button id="searchAction2"><i class="fa fa-search fa-lg"></i></button>
+			</div> 
+		</div>-->
+
+		  
+
+
+ 
+		 <div class="member_list">
+			 <ul class="mbr_limit" id="mbr_limitAra"></ul>
+			 <!-- <ul class="mbr_limit" id="mbr_limitAra2" style="display: none;">test</ul> -->
+		 </div>
+		 <div class="wrap-loading display-none">
+			 <div>
+				 <img src="../../../images/ajax-loader.gif" />
+			 </div>
+		 </div>
+	 </form>
+ </div>
+ 
+ <div class="profileImg setup_popup" style="display:none;">
+	 <!--<p class="close"><i class="fa fa-times fa-1x dispatch_pop_close hand"></i></p>-->
+	 
+	 <!-- <h2>이미지뷰</h2> -->
+	 <p class="set_img" id="img_pop">
+ 
+	 </p>	
+ </div>
