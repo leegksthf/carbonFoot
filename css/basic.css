@@ -13,7 +13,8 @@
 .carbon-main-wrap .header{height: auto !important;}
 .carbon-header{text-align:center;}
 .carbon-header .logo{width: 40%; height: auto;}
-.carbon-header button{position: absolute; right: 15px; top: 0; margin: 20px 0px; width: 11%; height: auto; background: transparent; border: none; cursor:pointer;}
+.carbon-header .signIn{position: absolute; right: 15px; top: 0; margin: 20px 0px; height: auto; background: transparent; border: none; cursor:pointer;}
+.carbon-header .signIn i{font-size: 27px;}
 .calc-menu .calc-menu-title{font-weight: bold; padding: 5px 0 5px 15px;}
 .circle-wrap{display: flex; overflow: revert;}
 .circle-wrap li{text-align: center; display: flex; flex-direction: column; width: calc(100% / 5); align-items: center; justify-content: center; padding-top: 3px;}
@@ -22,8 +23,8 @@
 .calc-menu .circle-wrap li a {margin-bottom: 5px;}
 .calc-menu .circle-wrap{padding: 10px 0 20px 0;}
 .circle-wrap li a img{max-width: 100%; position: absolute; transform: translate(-50%, -50%); top:50%; padding: 15px;}
-.circle-wrap li:nth-child(2) a img{padding: 20px;}
-.circle-wrap li:nth-child(4) a img{padding: 18px;}
+.circle-wrap li:nth-child(2) a img,
+.circle-wrap li:nth-child(4) a img{padding: 15px;}
 .circle-wrap li:first-child a img,
 .circle-wrap li:nth-child(6) a img,
 .circle-wrap li:nth-child(14) a img{padding: 17px;}

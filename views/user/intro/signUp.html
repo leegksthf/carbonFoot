@@ -1,7 +1,7 @@
 <body>
 	<div class="signUp-wrap">
 		<div class="header">
-			<a href="javascript:window.history.back();">
+			<a href="/">
 				<i class="fas fa-chevron-left"></i>
 			</a>
 			<span>회원가입</span>
@@ -15,7 +15,7 @@
 			<div class="id-wrap">
 				<p class="idText">아이디</p>
 				<div class="inputId-wrap">
-					<input type="text" id="Id" class="inputId" placeholder="아이디를 입력해주세요(6자 이상)" />
+					<input type="text" id="Id" name="id" class="inputId" placeholder="아이디를 입력해주세요(6자 이상)" />
 					<button class="idChkBtn">중복확인</button>
 				</div>
 			</div>
@@ -99,8 +99,13 @@
 				<h4>이용동의</h4>
 			</div>
 			<div class="modal-body">
-				<p>111내용입니다</p>
-				<p>내용내용</p>
+				<p>개인정보 수집 및 이용 동의서</p>
+				<br/>
+				<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+				<br/><br/><br/>
+				<p>개인정보 수집 및 이용 동의서</p>
+				<p>개인정보 수집 및 이용 동의서</p>
+
 			</div>
 			<div class="close-modal">닫기</i>
 			</div>
@@ -116,8 +121,7 @@
 				<h4>마케팅 활용 동의</h4>
 			</div>
 			<div class="modal-body">
-				<p>222내용입니다</p>
-				<p>내용내용</p>
+				<p>마케팅 활용 수집 동의</p>
 			</div>
 			<div class="close-modal">닫기</i>
 			</div>
@@ -133,39 +137,6 @@
 				<h4>개인정보 수집 이용동의</h4>
 			</div>
 			<div class="modal-body">
-				<p>333내용입니다</p>
-				<p>내용내용</p>
-				<p>333내용입니다</p>
-				<p>내용내용</p>
-				<p>333내용입니다</p>
-				<p>내용내용</p>
-				<p>333내용입니다</p>
-				<p>내용내용</p>
-				<p>333내용입니다</p>
-				<p>내용내용</p>
-				<p>333내용입니다</p>
-				<p>내용내용</p>
-				<p>333내용입니다</p>
-				<p>내용내용</p>
-				<p>333내용입니다</p>
-				<p>내용내용</p>
-				<p>333내용입니다</p>
-				<p>내용내용</p>
-				<p>333내용입니다</p>
-				<p>내용내용</p>
-				<p>내용내용</p>
-				<p>333내용입니다</p>
-				<p>내용내용</p>
-				<p>333내용입니다</p>
-				<p>내용내용</p>
-				<p>333내용입니다</p>
-				<p>내용내용</p>
-				<p>내용내용</p>
-				<p>333내용입니다</p>
-				<p>내용내용</p>
-				<p>333내용입니다</p>
-				<p>내용내용</p>
-				<p>333내용입니다</p>
 				<p>내용내용</p>
 			</div>
 			<div class="close-modal">닫기</i>
@@ -206,6 +177,7 @@
 			btn[i].onclick = function (e) {
 				e.preventDefault();
 				modal = document.querySelector(e.target.getAttribute("href"));
+				console.log(modal);
 				modal.style.display = "block";
 			}
 		}
@@ -262,6 +234,35 @@
 		// 			$("#success").removeClass("active");
 		// 	 }
 		// });
+
+		$('#success').click(function() {
+			if($("input[name=name]").val() == '') {
+				alert("이름을 입력해주세요.")
+				$("input[name=name]").focus();
+				return false;
+			}
+			if($("input[name=id]").val() == '') {
+				alert("아이디를 입력해주세요.")
+				$("input[name=id]").focus();
+				return false;
+			}
+			if($("input[name=password1]").val() == '') {
+				alert("비밀번호를 입력해주세요.")
+				$("input[name=password1]").focus();
+				return false;
+			}
+			if($("input[name=password2]").val() == '') {
+				alert("비밀번호 확인을 입력해주세요.")
+				$("input[name=password2]").focus();
+				return false;
+			}
+			if($("input[name=age]").val() == '') {
+				alert("나이를 입력해주세요.")
+				$("input[name=age]").focus();
+				return false;
+			}
+		})
+		
 
 	</script>
 </body>
